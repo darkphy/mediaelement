@@ -12,7 +12,9 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-eslint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-serve');
+	//grunt.loadNpmTasks('grunt-serve');
+	grunt.loadNpmTasks('grunt-contrib-connect');
+
 
 
 	var rendererSources;
@@ -32,12 +34,14 @@ module.exports = function (grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		serve: {
-				options : {
-						port: 3000,
-						base: './'
-				}
-    },
+		connect: {
+     server: {
+       options: {
+        port: 3000,
+				keepalive : true
+       }
+     }
+	},
 		watch: {
     css: {
         files: ['src/css/*.css'],

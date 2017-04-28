@@ -102,6 +102,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		new MediaElementPlayer(mediaElements[i], {
 			stretching: stretching,
 			pluginPath: '../build/',
+			videoVolume : 'horizontal',
+			features: ['progress','playpause','loop','volume','source-chooser','fullscreen'],
 			success: function (media) {
 				var renderer = document.getElementById(media.id + '-rendername');
 

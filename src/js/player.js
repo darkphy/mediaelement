@@ -380,7 +380,8 @@ class MediaElementPlayer {
 			t.container.innerHTML = `<div class="${t.options.classPrefix}inner">` +
 				`<div class="${t.options.classPrefix}mediaelement"></div>` +
 				`<div class="${t.options.classPrefix}layers"></div>` +
-				`<div class="${t.options.classPrefix}controls"></div>` +
+				`<div class="${t.options.classPrefix}controls"><div class="${t.options.classPrefix}controls-drag"></div></div>` +
+				`<div class="${t.options.classPrefix}controlbg"></div>` +
 				`<div class="${t.options.classPrefix}clear"></div>` +
 			`</div>`;
 			t.container.addEventListener('focus', (e) => {
@@ -491,7 +492,7 @@ class MediaElementPlayer {
 			t.media.player = t;
 
 			// find parts
-			t.controls = t.container.querySelector(`.${t.options.classPrefix}controls`);
+			t.controls = t.container.querySelector(`.${t.options.classPrefix}controls-drag`);
 			t.layers = t.container.querySelector(`.${t.options.classPrefix}layers`);
 
 			// determine the size
@@ -572,7 +573,7 @@ class MediaElementPlayer {
 			});
 
 			// any additional controls people might add and want to hide
-			const controls = t.container.querySelectorAll(`.${t.options.classPrefix}control`);
+			const controls = t.container.querySelectorAll(`.${t.options.classPrefix}controls-drag`);
 			for (let i = 0, total = controls.length; i < total; i++) {
 				dom.fadeIn(controls[i], 200, () => {
 					dom.removeClass(controls[i], `${t.options.classPrefix}offscreen`);
@@ -583,7 +584,7 @@ class MediaElementPlayer {
 			t.controls.style.display = '';
 
 			// any additional controls people might add and want to hide
-			const controls = t.container.querySelectorAll(`.${t.options.classPrefix}control`);
+			const controls = t.container.querySelectorAll(`.${t.options.classPrefix}controls-drag`);
 			for (let i = 0, total = controls.length; i < total; i++) {
 				dom.removeClass(controls[i], `${t.options.classPrefix}offscreen`);
 				controls[i].style.display = '';
@@ -635,7 +636,7 @@ class MediaElementPlayer {
 			t.controls.style.display = '';
 
 			// hide others
-			const controls = t.container.querySelectorAll(`.${t.options.classPrefix}control`);
+			const controls = t.container.querySelectorAll(`.${t.options.classPrefix}controls-drag`);
 			for (let i = 0, total = controls.length; i < total; i++) {
 				dom.addClass(controls[i], `${t.options.classPrefix}offscreen`);
 				controls[i].style.display = '';
@@ -1383,6 +1384,7 @@ class MediaElementPlayer {
 		// Substract the width of the feature siblings from time rail
 		const controlsWidth = parseFloat(t.controls.offsetWidth);
 		t.rail.style.width = `${(siblingsWidth > controlsWidth ? 0 : controlsWidth - siblingsWidth)}px`;
+
 
 		const event = createEvent('controlsresize', t.container);
 		t.container.dispatchEvent(event);

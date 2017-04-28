@@ -87,7 +87,11 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 
 		fullscreenBtn.className = `${t.options.classPrefix}button ${t.options.classPrefix}fullscreen-button`;
-		fullscreenBtn.innerHTML = `<button type="button" aria-controls="${t.id}" title="${fullscreenTitle}" aria-label="${fullscreenTitle}" tabindex="0"></button>`;
+		fullscreenBtn.innerHTML = `
+			<button type="button" aria-controls="${t.id}" title="${fullscreenTitle}" aria-label="${fullscreenTitle}" tabindex="0" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect">
+					<i class="material-icons">fullscreen</i>
+			</button>
+			`;
 		t.addControlElement(fullscreenBtn, 'fullscreen');
 
 		fullscreenBtn.addEventListener('click', () => {
@@ -280,6 +284,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (t.fullscreenBtn) {
 			removeClass(t.fullscreenBtn, `${t.options.classPrefix}fullscreen`);
 			addClass(t.fullscreenBtn, `${t.options.classPrefix}unfullscreen`);
+			t.fullscreenBtn.querySelector(".material-icons").innerHTML = "fullscreen_exit";
 		}
 
 		t.setControlsSize();
@@ -348,6 +353,8 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		removeClass(t.fullscreenBtn, `${t.options.classPrefix}unfullscreen`);
 		addClass(t.fullscreenBtn, `${t.options.classPrefix}fullscreen`);
+
+		t.fullscreenBtn.querySelector(".material-icons").innerHTML = "fullscreen";
 
 		t.setControlsSize();
 		t.isFullScreen = false;

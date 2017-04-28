@@ -49,7 +49,10 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 
 		play.className = `${t.options.classPrefix}button ${t.options.classPrefix}playpause-button ${t.options.classPrefix}play`;
-		play.innerHTML = `<button type="button" aria-controls="${t.id}" title="${playTitle}" aria-label="${pauseTitle}" tabindex="0"></button>`;
+		play.innerHTML = `
+			<button type="button" aria-controls="${t.id}" title="${playTitle}" aria-label="${pauseTitle}" tabindex="0" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect">
+				<i class="material-icons">play_arrow</i>
+			</button>`;
 		play.addEventListener('click', () => {
 			if (media.paused) {
 				media.play();
@@ -72,6 +75,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				addClass(play, `${t.options.classPrefix}pause`);
 				playBtn.setAttribute('title', pauseTitle);
 				playBtn.setAttribute('aria-label', pauseTitle);
+				play.querySelector(".material-icons").innerHTML = 'pause'
 			} else {
 
 				removeClass(play, `${t.options.classPrefix}pause`);
@@ -79,6 +83,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				addClass(play, `${t.options.classPrefix}play`);
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
+				play.querySelector(".material-icons").innerHTML = 'play_arrow'
 			}
 		}
 
@@ -112,5 +117,3 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 	}
 });
-
-

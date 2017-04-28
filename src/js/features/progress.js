@@ -7,6 +7,7 @@ import i18n from '../core/i18n';
 import {IS_FIREFOX, IS_IOS, IS_ANDROID} from '../utils/constants';
 import {secondsToTimeCode} from '../utils/time';
 import {offset} from '../utils/dom';
+import {TweenLite} from 'gsap'
 
 /**
  * Progress/loaded bar
@@ -38,7 +39,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		let
 			lastKeyPressTime = 0,
-			mouseIsDown = false,
 			startedPaused = false
 		;
 
@@ -53,8 +53,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			rail = document.createElement('div')
 		;
 
-		rail.className = `${t.options.classPrefix}time-rail`;
-		rail.innerHTML = `<span class="${t.options.classPrefix}time-total ${t.options.classPrefix}time-slider">` +
+		rail.className = `${t.options.classPrefix}time-rail ${t.options.classPrefix}time-slider`;
+		rail.innerHTML = `<span class="${t.options.classPrefix}time-total">` +
 			`<span class="${t.options.classPrefix}time-buffering"></span>` +
 			`<span class="${t.options.classPrefix}time-loaded"></span>` +
 			`<span class="${t.options.classPrefix}time-current"></span>` +
@@ -67,6 +67,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		controls.querySelector(`.${t.options.classPrefix}time-buffering`).style.display = 'none';
 
+		t.mouseIsDown = false;
 		t.rail = controls.querySelector(`.${t.options.classPrefix}time-rail`);
 		t.total = controls.querySelector(`.${t.options.classPrefix}time-total`);
 		t.loaded = controls.querySelector(`.${t.options.classPrefix}time-loaded`);
@@ -119,7 +120,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					t.newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
 
 					// fake seek to where the mouse is
-					if (mouseIsDown && media.currentTime !== null && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
+					if (t.mouseIsDown && media.currentTime !== null && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
 						t.setCurrentRailHandle(t.newTime);
 						t.updateCurrent(t.newTime);
 					}
@@ -193,7 +194,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			},
 			handleMouseup = () => {
 
-				if (mouseIsDown && media.currentTime !== null && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
+				if (t.mouseIsDown && media.currentTime !== null && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
 					media.setCurrentTime(t.newTime);
 					player.setCurrentRail();
 					t.updateCurrent(t.newTime);
@@ -201,7 +202,10 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (t.forcedHandlePause) {
 					t.media.play();
 				}
-				t.forcedHandlePause = false;
+
+				setTimeout(function(){
+					t.forcedHandlePause = false;
+				},1500);
 			};
 
 		// Events
@@ -292,6 +296,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		for (let i = 0, total = events.length; i < total; i++) {
 			t.slider.addEventListener(events[i], (e) => {
+				t.handle.classList.add('active');
 				t.forcedHandlePause = false;
 				if (media.duration !== Infinity) {
 					// only handle left clicks or touch
@@ -302,12 +307,13 @@ Object.assign(MediaElementPlayer.prototype, {
 							t.forcedHandlePause = true;
 						}
 
-						mouseIsDown = true;
+						t.mouseIsDown = true;
 						handleMouseMove(e);
 						const endEvents = ['mouseup', 'touchend'];
 
 						for (let j = 0, totalEvents = endEvents.length; j < totalEvents; j++) {
 							t.container.addEventListener(endEvents[j], (event) => {
+								t.handle.classList.remove('active');
 								const target = event.target;
 								if (target === t.slider || target.closest(`.${t.options.classPrefix}time-slider`)) {
 									handleMouseMove(event);
@@ -316,7 +322,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						}
 						t.globalBind('mouseup.dur touchend.dur', () => {
 							handleMouseup();
-							mouseIsDown = false;
+							t.mouseIsDown = false;
 							if (t.timefloat) {
 								t.timefloat.style.display = 'none';
 							}
@@ -344,7 +350,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 		t.slider.addEventListener('mouseleave', () => {
 			if (media.duration !== Infinity) {
-				if (!mouseIsDown) {
+				if (!t.mouseIsDown) {
 					t.globalUnbind('mousemove.dur');
 					if (t.timefloat) {
 						t.timefloat.style.display = 'none';
@@ -477,7 +483,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	setCurrentRailMain (t, fakeTime) {
 		if (t.media.currentTime !== undefined && t.media.duration) {
-			const nTime = (typeof fakeTime === 'undefined') ? t.media.currentTime : fakeTime;
+			const nTime = (typeof fakeTime === 'undefined' || !fakeTime) ? t.media.currentTime : fakeTime;
 
 
 			// update bar and handle
@@ -490,8 +496,13 @@ Object.assign(MediaElementPlayer.prototype, {
 				handlePos = (handlePos < 0) ? 0 : handlePos;
 
 				//newWidth = nTime / t.media.duration * 100;
-				t.current.style.transform = `scaleX(${newWidth/tW})`;
-				t.handle.style.transform = `translateX(${handlePos}px)`;
+				if(t.mouseIsDown){
+					t.current.style.transform = `scaleX(${newWidth/tW})`;
+					t.handle.style.transform = `translateX(${handlePos}px)`;
+				}else{
+					TweenLite.to(t.current,.5,{transform : `scaleX(${newWidth/tW})`});
+					TweenLite.to(t.handle,.5,{transform : `translateX(${handlePos}px)`});
+				}
 
 
 				if(!t.hovered.classList.contains('nohver')){

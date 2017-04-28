@@ -74,8 +74,12 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		mute.className = `${t.options.classPrefix}button ${t.options.classPrefix}volume-button ${t.options.classPrefix}mute`;
 		mute.innerHTML = mode === 'horizontal' ?
-			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` :
-			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` +
+			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect">
+				<i class="material-icons">volume_up</i>
+			</button>` :
+			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect">
+				<i class="material-icons">volume_up</i>
+			</button>` +
 			`<a href="javascript:void(0);" class="${t.options.classPrefix}volume-slider">` +
 				`<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
 				`<div class="${t.options.classPrefix}volume-total">` +
@@ -123,16 +127,28 @@ Object.assign(MediaElementPlayer.prototype, {
 				// adjust mute button style
 				if (volume === 0) {
 					removeClass(mute, `${t.options.classPrefix}mute`);
+					removeClass(mute, `${t.options.classPrefix}halfmute`);
 					addClass(mute, `${t.options.classPrefix}unmute`);
 					const button = mute.firstElementChild;
 					button.setAttribute('title', unmuteText);
 					button.setAttribute('aria-label', unmuteText);
+					button.querySelector(".material-icons").innerHTML = "volume_off";
+				} else if (volume <= .5) {
+					removeClass(mute, `${t.options.classPrefix}mute`);
+					removeClass(mute, `${t.options.classPrefix}unmute`);
+					addClass(mute, `${t.options.classPrefix}halfmute`);
+					const button = mute.firstElementChild;
+					button.setAttribute('title', unmuteText);
+					button.setAttribute('aria-label', unmuteText);
+					button.querySelector(".material-icons").innerHTML = "volume_down";
 				} else {
 					removeClass(mute, `${t.options.classPrefix}unmute`);
+					removeClass(mute, `${t.options.classPrefix}halfmute`);
 					addClass(mute, `${t.options.classPrefix}mute`);
 					const button = mute.firstElementChild;
 					button.setAttribute('title', muteText);
 					button.setAttribute('aria-label', muteText);
+					button.querySelector(".material-icons").innerHTML = "volume_up";
 				}
 
 				const
@@ -367,5 +383,3 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 	}
 });
-
-
