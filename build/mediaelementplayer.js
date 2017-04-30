@@ -9387,6 +9387,31 @@ var _dom = _dereq_(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function closest(el, selector) {
+	var matchesFn;
+
+	// find vendor prefix
+	['matches', 'webkitMatchesSelector', 'mozMatchesSelector', 'msMatchesSelector', 'oMatchesSelector'].some(function (fn) {
+		if (typeof _document2.default.body[fn] == 'function') {
+			matchesFn = fn;
+			return true;
+		}
+		return false;
+	});
+
+	var parent;
+
+	// traverse parents
+	while (el) {
+		parent = el.parentElement;
+		if (parent && parent[matchesFn](selector)) {
+			return parent;
+		}
+		el = parent;
+	}
+
+	return null;
+}
 /**
  * Play/Pause button
  *
@@ -9443,6 +9468,9 @@ Object.assign(_player2.default.prototype, {
    * @param {String} which - token to determine new state of button
    */
 		function togglePlayPause(which) {
+			var mjs = layers.querySelector('.' + t.options.classPrefix + 'playpauseanimate');
+			var mjsc = closest(controls, '.' + t.options.classPrefix + 'container');
+			mjsc.classList.remove('iopen');
 			if ('play' === which) {
 				(0, _dom.removeClass)(play, t.options.classPrefix + 'play');
 				(0, _dom.removeClass)(play, t.options.classPrefix + 'replay');
@@ -9450,6 +9478,11 @@ Object.assign(_player2.default.prototype, {
 				playBtn.setAttribute('title', pauseTitle);
 				playBtn.setAttribute('aria-label', pauseTitle);
 				play.querySelector(".material-icons").innerHTML = 'pause';
+
+				if (!t.forcedHandlePause && mjs) {
+					mjs.querySelector(".playanimate").classList.add("beginanimate");
+					mjs.querySelector(".pauseanimate").classList.remove('beginanimate');
+				}
 			} else {
 
 				(0, _dom.removeClass)(play, t.options.classPrefix + 'pause');
@@ -9458,6 +9491,11 @@ Object.assign(_player2.default.prototype, {
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
 				play.querySelector(".material-icons").innerHTML = 'play_arrow';
+
+				if (!t.forcedHandlePause && mjs) {
+					mjs.querySelector(".playanimate").classList.remove("beginanimate");
+					mjs.querySelector(".pauseanimate").classList.add('beginanimate');
+				}
 			}
 		}
 
@@ -10049,7 +10087,7 @@ Object.assign(_player.config, {
 	/**
   * @type {String}
   */
-	timeAndDurationSeparator: '<span> | </span>'
+	timeAndDurationSeparator: '<span> / </span>'
 });
 
 Object.assign(_player2.default.prototype, {
@@ -11427,13 +11465,35 @@ Object.assign(_player2.default.prototype, {
 		button.addEventListener('focus', function () {
 			if (mode === 'vertical') {
 				volumeSlider.style.display = 'block';
+			} else {
+				openSlider();
 			}
 		});
 		button.addEventListener('blur', function () {
 			if (mode === 'vertical') {
 				volumeSlider.style.display = 'none';
+			} else {
+				closeSlider();
 			}
 		});
+		button.addEventListener('mouseenter', function () {
+			openSlider();
+		});
+		button.addEventListener('mouseleave', function () {
+			closeSlider();
+		});
+
+		var openSlider = function openSlider() {
+			volumeSlider.classList.add("active");
+			if (t.volumeSliderTimeout) {
+				clearTimeout(t.volumeSliderTimeout);
+			}
+		};
+		var closeSlider = function closeSlider() {
+			t.volumeSliderTimeout = setTimeout(function () {
+				volumeSlider.classList.remove("active");
+			}, 2000);
+		};
 
 		// listen for volume change events from other sources
 		media.addEventListener('volumechange', function (e) {
@@ -11997,7 +12057,7 @@ var MediaElementPlayer = function () {
 			t.container.tabIndex = 0;
 			t.container.setAttribute('role', 'application');
 			t.container.setAttribute('aria-label', videoPlayerTitle);
-			t.container.innerHTML = '<div class="' + t.options.classPrefix + 'inner">' + ('<div class="' + t.options.classPrefix + 'mediaelement"></div>') + ('<div class="' + t.options.classPrefix + 'layers"></div>') + ('<div class="' + t.options.classPrefix + 'controls"><div class="' + t.options.classPrefix + 'controls-drag"></div></div>') + ('<div class="' + t.options.classPrefix + 'controlbg"></div>') + ('<div class="' + t.options.classPrefix + 'clear"></div>') + '</div>';
+			t.container.innerHTML = '<div class="' + t.options.classPrefix + 'inner">' + ('<div class="' + t.options.classPrefix + 'mediaelement"></div>') + ('<div class="' + t.options.classPrefix + 'layers"></div>') + ('<div class="' + t.options.classPrefix + 'controls">') + ('<div class="' + t.options.classPrefix + 'controls-drag"></div></div>') + ('<div class="' + t.options.classPrefix + 'controlbg"></div>') + ('<div class="' + t.options.classPrefix + 'clear"></div>') + '</div>';
 			t.container.addEventListener('focus', function (e) {
 				if (!t.controlsAreVisible && !t.hasFocus && t.controlsEnabled) {
 					t.showControls(true);
@@ -12670,11 +12730,12 @@ var MediaElementPlayer = function () {
 				t.disableControls();
 			}
 
-			var play = t.layers.querySelector('.' + t.options.classPrefix + 'overlay-play');
-
-			if (play) {
-				play.style.display = 'none';
-			}
+			/*
+   const play = t.layers.querySelector(`.${t.options.classPrefix}overlay-play`);
+   	if (play) {
+   	play.style.display = 'none';
+   }
+   */
 
 			// Tell user that the file cannot be played
 			if (t.options.error) {
@@ -13230,7 +13291,7 @@ var MediaElementPlayer = function () {
 
 			loading.style.display = 'none'; // start out hidden
 			loading.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer';
-			loading.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-loading">' + ('<span class="' + t.options.classPrefix + 'overlay-loading-bg-img"></span>') + '</div>';
+			loading.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-loading">' + ('<i class="' + t.options.classPrefix + 'overlay-loading-bg-img material-icons">filter_tilt_shift</i>') + '</div>';
 			layers.appendChild(loading);
 
 			error.style.display = 'none';
@@ -13238,8 +13299,9 @@ var MediaElementPlayer = function () {
 			error.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-error"></div>';
 			layers.appendChild(error);
 
-			bigPlay.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer ' + t.options.classPrefix + 'overlay-play';
-			bigPlay.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-button" role="button" tabindex="0"' + ('aria-label="' + _i18n2.default.t('mejs.play') + '" aria-pressed="false"></div>');
+			bigPlay.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer ' + t.options.classPrefix + 'overlay-play ' + t.options.classPrefix + 'playpauseanimate';
+			//bigPlay.innerHTML = `<div class="${t.options.classPrefix}overlay-button" role="button" tabindex="0" aria-label="${i18n.t('mejs.play')}" aria-pressed="false"><i class="material-icons 48dp">play_arrow</i></div>`;
+			bigPlay.innerHTML = '\n\t\t\t<div class="' + t.options.classPrefix + 'overlay-button playanimate"><i class="material-icons">play_arrow</i></div>\n\t\t\t<div class="' + t.options.classPrefix + 'overlay-button pauseanimate"><i class="material-icons">pause</i></div>\n\t\t';
 			bigPlay.addEventListener('click', function () {
 				// Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay
 				// started and immediately stopped the video
@@ -13259,13 +13321,16 @@ var MediaElementPlayer = function () {
 			});
 			layers.appendChild(bigPlay);
 
-			if (t.media.rendererName !== null && (t.media.rendererName.match(/(youtube|facebook)/) && !(player.media.originalNode.getAttribute('poster') || player.options.poster) || _constants.IS_STOCK_ANDROID)) {
-				bigPlay.style.display = 'none';
-			}
+			/*
+   		if (t.media.rendererName !== null && ((t.media.rendererName.match(/(youtube|facebook)/) &&
+   			!(player.media.originalNode.getAttribute('poster') || player.options.poster)) || IS_STOCK_ANDROID)) {
+   			bigPlay.style.display = 'none';
+   		}
+   	*/
 
 			// show/hide big play button
 			media.addEventListener('play', function () {
-				bigPlay.style.display = 'none';
+				//bigPlay.style.display = 'none';
 				loading.style.display = 'none';
 				if (buffer) {
 					buffer.style.display = 'none';
@@ -13274,7 +13339,7 @@ var MediaElementPlayer = function () {
 			});
 
 			media.addEventListener('playing', function () {
-				bigPlay.style.display = 'none';
+				//bigPlay.style.display = 'none';
 				loading.style.display = 'none';
 				if (buffer) {
 					buffer.style.display = 'none';
@@ -13283,7 +13348,7 @@ var MediaElementPlayer = function () {
 			});
 
 			media.addEventListener('seeking', function () {
-				bigPlay.style.display = 'none';
+				//bigPlay.style.display = 'none';
 				loading.style.display = '';
 				if (buffer) {
 					buffer.style.display = '';
@@ -13291,7 +13356,7 @@ var MediaElementPlayer = function () {
 			});
 
 			media.addEventListener('seeked', function () {
-				bigPlay.style.display = media.paused && !_constants.IS_STOCK_ANDROID ? '' : 'none';
+				//bigPlay.style.display = media.paused && !IS_STOCK_ANDROID ? '' : 'none';
 				loading.style.display = 'none';
 				if (buffer) {
 					buffer.style.display = '';
@@ -13300,9 +13365,11 @@ var MediaElementPlayer = function () {
 
 			media.addEventListener('pause', function () {
 				loading.style.display = 'none';
-				if (!_constants.IS_STOCK_ANDROID) {
-					bigPlay.style.display = '';
-				}
+				/*
+    if (!IS_STOCK_ANDROID) {
+    	bigPlay.style.display = '';
+    }
+    */
 				if (buffer) {
 					buffer.style.display = 'none';
 				}
@@ -13347,7 +13414,7 @@ var MediaElementPlayer = function () {
 			media.addEventListener('error', function (e) {
 				t._handleError(e);
 				loading.style.display = 'none';
-				bigPlay.style.display = 'none';
+				//bigPlay.style.display = 'none';
 				if (buffer) {
 					buffer.style.display = 'none';
 				}

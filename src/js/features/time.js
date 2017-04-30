@@ -23,7 +23,7 @@ Object.assign(config, {
 	/**
 	 * @type {String}
 	 */
-	timeAndDurationSeparator: '<span> | </span>'
+	timeAndDurationSeparator: '<span> / </span>'
 });
 
 
@@ -149,5 +149,3 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 	}
 });
-
-

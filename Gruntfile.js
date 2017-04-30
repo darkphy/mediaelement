@@ -179,7 +179,9 @@ module.exports = function (grunt) {
 					// Add vendor prefixes.
 					require('autoprefixer')({browsers: 'last 2 versions, ie > 8'}),
 					// Minify the result.
-					require('cssnano')()
+					require('cssnano')(
+						{ reduceIdents: false }						
+					)
 				]
 			},
 			main: {

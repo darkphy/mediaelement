@@ -7,6 +7,31 @@ import i18n from '../core/i18n';
 import {isString} from '../utils/general';
 import {addClass, removeClass} from '../utils/dom';
 
+function closest(el, selector) {
+    var matchesFn;
+
+    // find vendor prefix
+    ['matches','webkitMatchesSelector','mozMatchesSelector','msMatchesSelector','oMatchesSelector'].some(function(fn) {
+        if (typeof document.body[fn] == 'function') {
+            matchesFn = fn;
+            return true;
+        }
+        return false;
+    })
+
+    var parent;
+
+    // traverse parents
+    while (el) {
+        parent = el.parentElement;
+        if (parent && parent[matchesFn](selector)) {
+            return parent;
+        }
+        el = parent;
+    }
+
+    return null;
+}
 /**
  * Play/Pause button
  *
@@ -69,6 +94,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		 * @param {String} which - token to determine new state of button
 		 */
 		function togglePlayPause (which) {
+			var mjs = layers.querySelector(`.${t.options.classPrefix}playpauseanimate`);
+			var mjsc = closest(controls,`.${t.options.classPrefix}container`);
+							mjsc.classList.remove('iopen');
 			if ('play' === which) {
 				removeClass(play, `${t.options.classPrefix}play`);
 				removeClass(play, `${t.options.classPrefix}replay`);
@@ -76,6 +104,11 @@ Object.assign(MediaElementPlayer.prototype, {
 				playBtn.setAttribute('title', pauseTitle);
 				playBtn.setAttribute('aria-label', pauseTitle);
 				play.querySelector(".material-icons").innerHTML = 'pause'
+
+				if(!t.forcedHandlePause && mjs){
+					mjs.querySelector(".playanimate").classList.add("beginanimate");
+					mjs.querySelector(".pauseanimate").classList.remove('beginanimate');
+				}
 			} else {
 
 				removeClass(play, `${t.options.classPrefix}pause`);
@@ -84,6 +117,12 @@ Object.assign(MediaElementPlayer.prototype, {
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
 				play.querySelector(".material-icons").innerHTML = 'play_arrow'
+
+				if(!t.forcedHandlePause && mjs){
+					mjs.querySelector(".playanimate").classList.remove("beginanimate");
+					mjs.querySelector(".pauseanimate").classList.add('beginanimate');
+				}
+
 			}
 		}
 

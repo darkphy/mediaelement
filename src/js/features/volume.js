@@ -334,13 +334,33 @@ Object.assign(MediaElementPlayer.prototype, {
 		button.addEventListener('focus', () => {
 			if (mode === 'vertical') {
 				volumeSlider.style.display = 'block';
+			}else{
+				openSlider();
 			}
 		});
 		button.addEventListener('blur', () => {
 			if (mode === 'vertical') {
 				volumeSlider.style.display = 'none';
+			}else{
+				closeSlider();
 			}
 		});
+		button.addEventListener('mouseenter', () => {
+			openSlider();
+		});
+		button.addEventListener('mouseleave', () => {
+			closeSlider();
+		});
+
+		var openSlider = () => {
+			volumeSlider.classList.add("active")
+			if(t.volumeSliderTimeout){clearTimeout(t.volumeSliderTimeout)}
+		}
+		var closeSlider = () => {
+			t.volumeSliderTimeout = setTimeout(() => {
+					volumeSlider.classList.remove("active") 
+			},2000);
+		}
 
 		// listen for volume change events from other sources
 		media.addEventListener('volumechange', (e) => {

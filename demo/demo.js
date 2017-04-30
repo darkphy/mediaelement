@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			stretching: stretching,
 			pluginPath: '../build/',
 			videoVolume : 'horizontal',
-			features: ['progress','playpause','loop','volume','source-chooser','fullscreen'],
+			features: ['progress','playpause','loop','volume','current','duration','sourcechooser','fullscreen'],
 			success: function (media) {
 				var renderer = document.getElementById(media.id + '-rendername');
 

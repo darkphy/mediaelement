@@ -12,7 +12,7 @@ import {
 	IS_IPHONE,
 	IS_ANDROID,
 	IS_IOS,
-	IS_STOCK_ANDROID,
+	//IS_STOCK_ANDROID,
 	HAS_MS_NATIVE_FULLSCREEN,
 	HAS_TRUE_NATIVE_FULLSCREEN
 } from './utils/constants';
@@ -380,7 +380,8 @@ class MediaElementPlayer {
 			t.container.innerHTML = `<div class="${t.options.classPrefix}inner">` +
 				`<div class="${t.options.classPrefix}mediaelement"></div>` +
 				`<div class="${t.options.classPrefix}layers"></div>` +
-				`<div class="${t.options.classPrefix}controls"><div class="${t.options.classPrefix}controls-drag"></div></div>` +
+				`<div class="${t.options.classPrefix}controls">` +
+				`<div class="${t.options.classPrefix}controls-drag"></div></div>` +
 				`<div class="${t.options.classPrefix}controlbg"></div>` +
 				`<div class="${t.options.classPrefix}clear"></div>` +
 			`</div>`;
@@ -1053,11 +1054,13 @@ class MediaElementPlayer {
 			t.disableControls();
 		}
 
+		/*
 		const play = t.layers.querySelector(`.${t.options.classPrefix}overlay-play`);
 
 		if (play) {
 			play.style.display = 'none';
 		}
+		*/
 
 		// Tell user that the file cannot be played
 		if (t.options.error) {
@@ -1613,7 +1616,7 @@ class MediaElementPlayer {
 		loading.style.display = 'none'; // start out hidden
 		loading.className = `${t.options.classPrefix}overlay ${t.options.classPrefix}layer`;
 		loading.innerHTML = `<div class="${t.options.classPrefix}overlay-loading">` +
-			`<span class="${t.options.classPrefix}overlay-loading-bg-img"></span>` +
+			`<i class="${t.options.classPrefix}overlay-loading-bg-img material-icons">filter_tilt_shift</i>` +
 			`</div>`;
 		layers.appendChild(loading);
 
@@ -1622,9 +1625,12 @@ class MediaElementPlayer {
 		error.innerHTML = `<div class="${t.options.classPrefix}overlay-error"></div>`;
 		layers.appendChild(error);
 
-		bigPlay.className = `${t.options.classPrefix}overlay ${t.options.classPrefix}layer ${t.options.classPrefix}overlay-play`;
-		bigPlay.innerHTML = `<div class="${t.options.classPrefix}overlay-button" role="button" tabindex="0"` +
-			`aria-label="${i18n.t('mejs.play')}" aria-pressed="false"></div>`;
+		bigPlay.className = `${t.options.classPrefix}overlay ${t.options.classPrefix}layer ${t.options.classPrefix}overlay-play ${t.options.classPrefix}playpauseanimate`;
+		//bigPlay.innerHTML = `<div class="${t.options.classPrefix}overlay-button" role="button" tabindex="0" aria-label="${i18n.t('mejs.play')}" aria-pressed="false"><i class="material-icons 48dp">play_arrow</i></div>`;
+		bigPlay.innerHTML =`
+			<div class="${t.options.classPrefix}overlay-button playanimate"><i class="material-icons">play_arrow</i></div>
+			<div class="${t.options.classPrefix}overlay-button pauseanimate"><i class="material-icons">pause</i></div>
+		`;
 		bigPlay.addEventListener('click', () => {
 			// Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay
 			// started and immediately stopped the video
@@ -1646,14 +1652,16 @@ class MediaElementPlayer {
 		});
 		layers.appendChild(bigPlay);
 
+/*
 		if (t.media.rendererName !== null && ((t.media.rendererName.match(/(youtube|facebook)/) &&
 			!(player.media.originalNode.getAttribute('poster') || player.options.poster)) || IS_STOCK_ANDROID)) {
 			bigPlay.style.display = 'none';
 		}
+	*/
 
 		// show/hide big play button
 		media.addEventListener('play', () => {
-			bigPlay.style.display = 'none';
+			//bigPlay.style.display = 'none';
 			loading.style.display = 'none';
 			if (buffer) {
 				buffer.style.display = 'none';
@@ -1662,7 +1670,7 @@ class MediaElementPlayer {
 		});
 
 		media.addEventListener('playing', () => {
-			bigPlay.style.display = 'none';
+			//bigPlay.style.display = 'none';
 			loading.style.display = 'none';
 			if (buffer) {
 				buffer.style.display = 'none';
@@ -1671,7 +1679,7 @@ class MediaElementPlayer {
 		});
 
 		media.addEventListener('seeking', () => {
-			bigPlay.style.display = 'none';
+			//bigPlay.style.display = 'none';
 			loading.style.display = '';
 			if (buffer) {
 				buffer.style.display = '';
@@ -1679,7 +1687,7 @@ class MediaElementPlayer {
 		});
 
 		media.addEventListener('seeked', () => {
-			bigPlay.style.display = media.paused && !IS_STOCK_ANDROID ? '' : 'none';
+			//bigPlay.style.display = media.paused && !IS_STOCK_ANDROID ? '' : 'none';
 			loading.style.display = 'none';
 			if (buffer) {
 				buffer.style.display = '';
@@ -1688,9 +1696,11 @@ class MediaElementPlayer {
 
 		media.addEventListener('pause', () => {
 			loading.style.display = 'none';
+			/*
 			if (!IS_STOCK_ANDROID) {
 				bigPlay.style.display = '';
 			}
+			*/
 			if (buffer) {
 				buffer.style.display = 'none';
 			}
@@ -1736,7 +1746,7 @@ class MediaElementPlayer {
 		media.addEventListener('error', (e) => {
 			t._handleError(e);
 			loading.style.display = 'none';
-			bigPlay.style.display = 'none';
+			//bigPlay.style.display = 'none';
 			if (buffer) {
 				buffer.style.display = 'none';
 			}
