@@ -504,7 +504,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* End: Progress Bar */
 
 /* Start: Fullscreen */
-.mejs__fullscreen-button{
+.mejs__fullscreen-button,.mejs__sourcechooser-button{
   float: right;
 }
 .mejs__fullscreen-button > button {
@@ -773,3 +773,65 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     display: block;
 }
 /* End: Error */
+
+
+
+/*Start Source Chooser ( settings )*/
+.mejs__settings-button-menu {
+    list-style: none;
+    background: rgba(34, 34, 34, 0.9);
+    text-shadow: 0 0 2px rgba(0,0,0,.5);
+    position: absolute;
+    bottom: 40px;
+    right: 20px;
+    color: #eee;
+    padding: 3px 0px;
+    font-size: 14px;
+    border-radius: 2px;
+}
+
+.mejs__settings-button-menu .mejs__settings-li{
+    padding: 5px;
+    cursor: pointer;
+}
+.mejs__settings-title {
+    font-size: 13px;
+    font-weight: 500;
+    min-width: 145px;
+    padding: 0 9px;
+}
+.mejs__settings-li:hover {
+    background: rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+}
+.mejs__settings-button-menu .mdl-switch.is-upgraded{
+  padding-left: 45px;
+}
+.mejs__settings-button-menu .mdl-switch .mdl-switch__track{
+  background: rgba(250, 250, 250, 0.30);
+}
+.mejs__settings-button-menu .mdl-switch.is-checked .mdl-switch__track{
+  background: #f12c35;
+}
+.mejs__settings-button-menu .mdl-switch .mdl-switch__thumb{
+  background: #d4d4d4;
+}
+.mejs__settings-button-menu .mdl-switch.is-checked .mdl-switch__thumb{
+    background: #FFF;
+}
+.flexbox-container{
+	display:flex;
+  flex-flow: row;
+}
+.flexbox-container.flexbox-col{
+	flex-flow: column;
+}
+.flexbox-adjust{
+  flex: 0 1 auto;
+}
+
+.flexbox-spread{
+  flex: 1 1 auto;
+}
+
+/*End sourcechooser Settings*/

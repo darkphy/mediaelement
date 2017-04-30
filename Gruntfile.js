@@ -48,7 +48,7 @@ module.exports = function (grunt) {
 				tasks: ['postcss:main','postcss:legacy','copy:build']
       },
       js: {
-        files: ['src/js/**/*.js','src/js/*.js'],
+        files: ['src/js/**/*.js','src/js/**/**/*.js','src/js/*.js'],
         tasks: ['browserify:dist','uglify:build','copy:build']
       }
     },
@@ -122,6 +122,8 @@ module.exports = function (grunt) {
 						'src/js/features/time.js',
 						'src/js/features/tracks.js',
 						'src/js/features/volume.js'
+					]).concat([
+						'src/js/plugins/sourcechooser.js'
 					]),
 
 					// new renderers
@@ -180,7 +182,7 @@ module.exports = function (grunt) {
 					require('autoprefixer')({browsers: 'last 2 versions, ie > 8'}),
 					// Minify the result.
 					require('cssnano')(
-						{ reduceIdents: false }						
+						{ reduceIdents: false }
 					)
 				]
 			},

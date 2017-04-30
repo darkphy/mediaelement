@@ -7913,7 +7913,7 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _en = _dereq_(15);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8284,7 +8284,7 @@ if (typeof mejsL10n !== 'undefined') {
 
 exports.default = i18n;
 
-},{"15":15,"26":26,"7":7}],6:[function(_dereq_,module,exports){
+},{"15":15,"27":27,"7":7}],6:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8303,9 +8303,9 @@ var _mejs = _dereq_(7);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _media = _dereq_(27);
+var _media = _dereq_(28);
 
 var _renderer = _dereq_(8);
 
@@ -8785,7 +8785,7 @@ _window2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
-},{"2":2,"26":26,"27":27,"3":3,"7":7,"8":8}],7:[function(_dereq_,module,exports){
+},{"2":2,"27":27,"28":28,"3":3,"7":7,"8":8}],7:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9004,13 +9004,13 @@ var _player = _dereq_(17);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
 var Features = _interopRequireWildcard(_constants);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -9366,7 +9366,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"17":17,"2":2,"24":24,"25":25,"26":26,"3":3,"5":5}],10:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"25":25,"26":26,"27":27,"3":3,"5":5}],10:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -9381,9 +9381,9 @@ var _i18n = _dereq_(5);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -9524,12 +9524,13 @@ Object.assign(_player2.default.prototype, {
 				(0, _dom.addClass)(play, t.options.classPrefix + 'replay');
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
+				playBtn.querySelector(".material-icons").innerHTML = "replay";
 			}
 		});
 	}
 });
 
-},{"17":17,"2":2,"25":25,"26":26,"5":5}],11:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"26":26,"27":27,"5":5}],11:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -9544,11 +9545,11 @@ var _i18n = _dereq_(5);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
-var _time = _dereq_(29);
+var _time = _dereq_(30);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 var _gsap = _dereq_(4);
 
@@ -10054,7 +10055,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"17":17,"2":2,"24":24,"25":25,"29":29,"4":4,"5":5}],12:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"25":25,"26":26,"30":30,"4":4,"5":5}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -10065,9 +10066,9 @@ var _player = _dereq_(17);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(29);
+var _time = _dereq_(30);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -10207,7 +10208,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"17":17,"2":2,"25":25,"29":29}],13:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"26":26,"30":30}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -10226,11 +10227,11 @@ var _player = _dereq_(17);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(29);
+var _time = _dereq_(30);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11150,7 +11151,7 @@ _mejs2.default.TrackFormatParser = {
 	}
 };
 
-},{"17":17,"2":2,"25":25,"26":26,"29":29,"5":5,"7":7}],14:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"26":26,"27":27,"30":30,"5":5,"7":7}],14:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -11165,11 +11166,11 @@ var _i18n = _dereq_(5);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11537,7 +11538,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"17":17,"2":2,"24":24,"25":25,"26":26,"5":5}],15:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"25":25,"26":26,"27":27,"5":5}],15:[function(_dereq_,module,exports){
 'use strict';
 
 /*!
@@ -11700,15 +11701,15 @@ var _i18n = _dereq_(5);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _time = _dereq_(29);
+var _time = _dereq_(30);
 
-var _media = _dereq_(27);
+var _media = _dereq_(28);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 var dom = _interopRequireWildcard(_dom);
 
@@ -13709,7 +13710,278 @@ exports.default = MediaElementPlayer;
 	}
 })(_mejs2.default.$);
 
-},{"2":2,"24":24,"25":25,"26":26,"27":27,"29":29,"3":3,"5":5,"6":6,"7":7}],18:[function(_dereq_,module,exports){
+},{"2":2,"25":25,"26":26,"27":27,"28":28,"3":3,"30":30,"5":5,"6":6,"7":7}],18:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * Source chooser button
+ *
+ * This feature creates a button to speed media in different levels.
+ */
+
+// Translations (English required)
+
+mejs.i18n.en["mejs.source-chooser"] = "Source Chooser";
+
+// Feature configuration
+Object.assign(mejs.MepDefaults, {
+	/**
+  * @type {?String}
+  */
+	sourcechooserText: null
+});
+
+Object.assign(MediaElementPlayer.prototype, {
+
+	/**
+  * Feature constructor.
+  *
+  * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+  * @param {MediaElementPlayer} player
+  * @param {$} controls
+  * @param {$} layers
+  * @param {HTMLElement} media
+  */
+	buildsourcechooser: function buildsourcechooser(player, controls, layers, media) {
+
+		var t = this,
+		    sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
+		    defaultSpeedText = "Normal",
+		    sources = [],
+		    children = t.mediaFiles ? t.mediaFiles : t.node.childNodes;
+
+		// add to list
+		var hoverTimeout = void 0;
+
+		for (var i = 0, total = children.length; i < total; i++) {
+			var s = children[i];
+
+			if (t.mediaFiles) {
+				sources.push(s);
+			} else if (s.nodeName === 'SOURCE') {
+				sources.push(s);
+			}
+		}
+		/*
+  		if (sources.length <= 1) {
+  			return;
+  		}
+  */
+
+		player.sourcechooserButton = document.createElement('div');
+		player.sourcechooserButton.className = t.options.classPrefix + "button " + t.options.classPrefix + "sourcechooser-button";
+		player.sourcechooserButton.innerHTML = "<button id=\"" + t.options.classPrefix + "settings-button\" type=\"button\" role=\"button\" aria-haspopup=\"true\" aria-owns=\"" + t.id + "\" title=\"" + sourceTitle + "\" aria-label=\"" + sourceTitle + "\" tabindex=\"0\" class=\"mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect\">\n\t\t\t\t<i class=\"material-icons\">settings</i>\n\t\t</button>" + ("\n\t\t\t<ul class=\"" + t.options.classPrefix + "settings-button-menu\">\n\t\t\t\t  <li class=\"" + t.options.classPrefix + "settings-li flexbox-container switchtoggle\">\n\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Autoplay</span>\n\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t<label class=\"mdl-switch mdl-js-switch mdl-js-ripple-effect\" for=\"switch-autoplay\">\n\t\t\t\t\t\t  \t<input id=\"switch-autoplay\" type=\"checkbox\" class=\"mdl-switch__input\" checked>\n\t\t\t\t\t\t  \t<span class=\"mdl-switch__label\"></span>\n\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container switchtoggle\">\n\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Annotation</span>\n\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t<label class=\"mdl-switch mdl-js-switch mdl-js-ripple-effect\" for=\"switch-annotation\">\n\t\t\t\t\t\t  \t<input id=\"switch-annotation\" type=\"checkbox\" class=\"mdl-switch__input\" checked>\n\t\t\t\t\t\t  \t<span class=\"mdl-switch__label\"></span>\n\t\t\t\t\t\t\t</label>\n\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Speed</div>\n\t\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t\t<span class=\"display_content\">\n\t\t\t\t\t\t\t\t\t" + defaultSpeedText + "\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<i class=\"material-icons\">keyboard_arrow_right</i>\n\t\t\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t  <li class=\"" + t.options.classPrefix + "settings-li flexbox-container\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Subtitles</div>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Quality</div>\n\t\t\t\t\t</li>\n\t\t\t</ul> ");
+
+		t.addControlElement(player.sourcechooserButton, 'sourcechooser');
+
+		var classname = player.sourcechooserButton.getElementsByClassName("switchtoggle");
+		Array.from(classname).forEach(function (element) {
+			element.addEventListener('click', function () {
+				element.querySelector(".mdl-switch").click();
+			});
+		});
+		//componentHandler.upgradeElement(button);
+
+
+		/*
+  		for (let i = 0, total = sources.length; i < total; i++) {
+  			const src = sources[i];
+  			if (src.type !== undefined && typeof media.canPlayType === 'function') {
+  				player.addSourceButton(src.src, src.title, src.type, media.src === src.src);
+  			}
+  		}
+  */
+
+		// hover
+		player.sourcechooserButton.addEventListener('mouseover', function () {
+			clearTimeout(hoverTimeout);
+			player.showSourcechooserSelector();
+		});
+		player.sourcechooserButton.addEventListener('mouseout', function () {
+			hoverTimeout = setTimeout(function () {
+				player.hideSourcechooserSelector();
+			}, 500);
+		});
+
+		// keyboard menu activation
+		player.sourcechooserButton.addEventListener('keydown', function (e) {
+
+			if (t.options.keyActions.length) {
+				var keyCode = e.which || e.keyCode || 0;
+
+				switch (keyCode) {
+					case 32:
+						// space
+						if (!mejs.MediaFeatures.isFirefox) {
+							// space sends the click event in Firefox
+							player.showSourcechooserSelector();
+						}
+						player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
+						break;
+					case 13:
+						// enter
+						player.showSourcechooserSelector();
+						player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
+						break;
+					case 27:
+						// esc
+						player.hideSourcechooserSelector();
+						player.sourcechooserButton.querySelector('button').focus();
+						break;
+					default:
+						return true;
+				}
+
+				e.preventDefault();
+				e.stopPropagation();
+			}
+		});
+
+		// close menu when tabbing away
+		player.sourcechooserButton.addEventListener('focusout', mejs.Utils.debounce(function () {
+			// Safari triggers focusout multiple times
+			// Firefox does NOT support e.relatedTarget to see which element
+			// just lost focus, so wait to find the next focused element
+			setTimeout(function () {
+				var parent = document.activeElement.closest("." + t.options.classPrefix + "sourcechooser-selector");
+				if (!parent) {
+					// focus is outside the control; close menu
+					player.hideSourcechooserSelector();
+				}
+			}, 0);
+		}, 100));
+
+		var radios = player.sourcechooserButton.querySelectorAll('input[type=radio]');
+
+		for (var _i = 0, _total = radios.length; _i < _total; _i++) {
+			// handle clicks to the source radio buttons
+			radios[_i].addEventListener('click', function () {
+				// set aria states
+				this.setAttribute('aria-selected', true);
+				this.checked = true;
+
+				var otherRadios = this.closest("." + t.options.classPrefix + "sourcechooser-selector").querySelectorAll('input[type=radio]');
+
+				for (var j = 0, radioTotal = otherRadios.length; j < radioTotal; j++) {
+					if (otherRadios[j] !== this) {
+						otherRadios[j].setAttribute('aria-selected', 'false');
+						otherRadios[j].removeAttribute('checked');
+					}
+				}
+
+				var src = this.value;
+
+				if (media.getSrc() !== src) {
+					var currentTime = media.currentTime;
+
+					var paused = media.paused,
+					    canPlayAfterSourceSwitchHandler = function canPlayAfterSourceSwitchHandler() {
+						if (!paused) {
+							media.setCurrentTime(currentTime);
+							media.play();
+						}
+						media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
+					};
+
+					media.pause();
+					media.setSrc(src);
+					media.load();
+					media.addEventListener('canplay', canPlayAfterSourceSwitchHandler);
+				}
+			});
+		}
+
+		// Handle click so that screen readers can toggle the menu
+		player.sourcechooserButton.querySelector('button').addEventListener('click', function () {
+			if (mejs.Utils.hasClass(mejs.Utils.siblings(this, "." + t.options.classPrefix + "sourcechooser-selector"), t.options.classPrefix + "offscreen")) {
+				player.showSourcechooserSelector();
+				player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
+			} else {
+				player.hideSourcechooserSelector();
+			}
+		});
+	},
+
+
+	/**
+  *
+  * @param {String} src
+  * @param {String} label
+  * @param {String} type
+  * @param {Boolean} isCurrent
+  */
+	addSourceButton: function addSourceButton(src, label, type, isCurrent) {
+		var t = this;
+		if (label === '' || label === undefined) {
+			label = src;
+		}
+		type = type.split('/')[1];
+
+		t.sourcechooserButton.querySelector('ul').innerHTML += "<li>" + ("<input type=\"radio\" name=\"" + t.id + "_sourcechooser\" id=\"" + t.id + "_sourcechooser_" + label + type + "\"") + ("role=\"menuitemradio\" value=\"" + src + "\" " + (isCurrent ? 'checked="checked"' : '') + " aria-selected=\"" + isCurrent + "\"/>") + ("<label for=\"" + t.id + "_sourcechooser_" + label + type + "\" aria-hidden=\"true\">" + label + " (" + type + ")</label>") + "</li>";
+
+		t.adjustSourcechooserBox();
+	},
+
+
+	/**
+  *
+  */
+	adjustSourcechooserBox: function adjustSourcechooserBox() {
+		var t = this;
+		// adjust the size of the outer box
+		t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector").style.height = parseFloat(t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector ul").offsetHeight) + "px";
+	},
+
+
+	/**
+  *
+  */
+	hideSourcechooserSelector: function hideSourcechooserSelector() {
+
+		var t = this;
+
+		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.querySelector('input[type=radio]')) {
+			return;
+		}
+
+		var selector = t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector"),
+		    radios = selector.querySelectorAll('input[type=radio]');
+		selector.setAttribute('aria-expanded', 'false');
+		selector.setAttribute('aria-hidden', 'true');
+		mejs.Utils.addClass(selector, t.options.classPrefix + "offscreen");
+
+		// make radios not focusable
+		for (var i = 0, total = radios.length; i < total; i++) {
+			radios[i].setAttribute('tabindex', '-1');
+		}
+	},
+
+
+	/**
+  *
+  */
+	showSourcechooserSelector: function showSourcechooserSelector() {
+
+		var t = this;
+
+		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.querySelector('input[type=radio]')) {
+			return;
+		}
+
+		var selector = t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector"),
+		    radios = selector.querySelectorAll('input[type=radio]');
+		selector.setAttribute('aria-expanded', 'true');
+		selector.setAttribute('aria-hidden', 'false');
+		mejs.Utils.removeClass(selector, t.options.classPrefix + "offscreen");
+
+		// make radios not focusable
+		for (var i = 0, total = radios.length; i < total; i++) {
+			radios[i].setAttribute('tabindex', '0');
+		}
+	}
+});
+
+},{}],19:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -13726,11 +13998,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(8);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _media = _dereq_(27);
+var _media = _dereq_(28);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -14008,7 +14280,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(DashNativeRenderer);
 
-},{"2":2,"24":24,"26":26,"27":27,"3":3,"7":7,"8":8}],19:[function(_dereq_,module,exports){
+},{"2":2,"25":25,"27":27,"28":28,"3":3,"7":7,"8":8}],20:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14036,11 +14308,11 @@ var _i18n2 = _interopRequireDefault(_i18n);
 
 var _renderer = _dereq_(8);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
-var _media = _dereq_(27);
+var _media = _dereq_(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -14542,7 +14814,7 @@ if (hasFlash) {
 	_renderer.renderer.add(FlashMediaElementAudioOggRenderer);
 }
 
-},{"2":2,"24":24,"26":26,"27":27,"3":3,"5":5,"7":7,"8":8}],20:[function(_dereq_,module,exports){
+},{"2":2,"25":25,"27":27,"28":28,"3":3,"5":5,"7":7,"8":8}],21:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -14559,11 +14831,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(8);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
-var _media = _dereq_(27);
+var _media = _dereq_(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -14829,7 +15101,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FlvNativeRenderer);
 
-},{"2":2,"24":24,"26":26,"27":27,"3":3,"7":7,"8":8}],21:[function(_dereq_,module,exports){
+},{"2":2,"25":25,"27":27,"28":28,"3":3,"7":7,"8":8}],22:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -14846,11 +15118,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(8);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
-var _media = _dereq_(27);
+var _media = _dereq_(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15200,7 +15472,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(HlsNativeRenderer);
 
-},{"2":2,"24":24,"26":26,"27":27,"3":3,"7":7,"8":8}],22:[function(_dereq_,module,exports){
+},{"2":2,"25":25,"27":27,"28":28,"3":3,"7":7,"8":8}],23:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -15217,9 +15489,9 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(8);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15354,7 +15626,7 @@ _window2.default.HtmlMediaElement = _mejs2.default.HtmlMediaElement = HtmlMediaE
 
 _renderer.renderer.add(HtmlMediaElement);
 
-},{"2":2,"24":24,"26":26,"3":3,"7":7,"8":8}],23:[function(_dereq_,module,exports){
+},{"2":2,"25":25,"27":27,"3":3,"7":7,"8":8}],24:[function(_dereq_,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -15373,9 +15645,9 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(8);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _media = _dereq_(27);
+var _media = _dereq_(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15983,7 +16255,7 @@ if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) 
 	_renderer.renderer.add(YouTubeIframeRenderer);
 }
 
-},{"2":2,"26":26,"27":27,"3":3,"7":7,"8":8}],24:[function(_dereq_,module,exports){
+},{"2":2,"27":27,"28":28,"3":3,"7":7,"8":8}],25:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -16168,7 +16440,7 @@ _mejs2.default.Features.isFullScreen = isFullScreen;
 _mejs2.default.Features.requestFullScreen = requestFullScreen;
 _mejs2.default.Features.cancelFullScreen = cancelFullScreen;
 
-},{"2":2,"3":3,"7":7}],25:[function(_dereq_,module,exports){
+},{"2":2,"3":3,"7":7}],26:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -16389,7 +16661,7 @@ _mejs2.default.Utils.siblings = siblings;
 _mejs2.default.Utils.visible = visible;
 _mejs2.default.Utils.ajax = ajax;
 
-},{"2":2,"3":3,"7":7}],26:[function(_dereq_,module,exports){
+},{"2":2,"3":3,"7":7}],27:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -16564,7 +16836,7 @@ _mejs2.default.Utils.createEvent = createEvent;
 _mejs2.default.Utils.isNodeAfter = isNodeAfter;
 _mejs2.default.Utils.isString = isString;
 
-},{"7":7}],27:[function(_dereq_,module,exports){
+},{"7":7}],28:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -16582,7 +16854,7 @@ var _mejs = _dereq_(7);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -16728,7 +17000,7 @@ _mejs2.default.Utils.getTypeFromFile = getTypeFromFile;
 _mejs2.default.Utils.getExtension = getExtension;
 _mejs2.default.Utils.normalizeExtension = normalizeExtension;
 
-},{"26":26,"7":7}],28:[function(_dereq_,module,exports){
+},{"27":27,"7":7}],29:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -16953,7 +17225,7 @@ if (/firefox/i.test(navigator.userAgent)) {
 	};
 }
 
-},{"2":2}],29:[function(_dereq_,module,exports){
+},{"2":2}],30:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -17228,4 +17500,4 @@ _mejs2.default.Utils.timeCodeToSeconds = timeCodeToSeconds;
 _mejs2.default.Utils.calculateTimeFormat = calculateTimeFormat;
 _mejs2.default.Utils.convertSMPTEtoSeconds = convertSMPTEtoSeconds;
 
-},{"7":7}]},{},[28,6,5,15,22,19,18,20,21,23,16,17,9,10,11,12,13,14]);
+},{"7":7}]},{},[29,6,5,15,23,20,19,21,22,24,16,17,9,10,11,12,13,14,18]);

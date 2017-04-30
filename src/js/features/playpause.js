@@ -151,6 +151,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				addClass(play, `${t.options.classPrefix}replay`);
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
+        playBtn.querySelector(".material-icons").innerHTML = "replay";
 			}
 
 		});

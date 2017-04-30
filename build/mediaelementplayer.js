@@ -9524,6 +9524,7 @@ Object.assign(_player2.default.prototype, {
 				(0, _dom.addClass)(play, t.options.classPrefix + 'replay');
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
+				playBtn.querySelector(".material-icons").innerHTML = "replay";
 			}
 		});
 	}
