@@ -13768,16 +13768,27 @@ Object.assign(MediaElementPlayer.prototype, {
   		}
   */
 
+		var speeds = [{ name: '0.25', value: 0.25 }, { name: '0.5', value: 0.5 }, { name: 'Normal', value: 1 }, { name: '1.5', value: 1.5 }, { name: '2.0', value: 2.0 }];
+		var speedsHTML = "";
+		for (var _i = 0; _i < speeds.length; _i++) {
+			var selected = "";
+			if (speeds[_i].value == 1) {
+				selected = "selected";
+			}
+			speedsHTML += "\n\t\t<li class=\"" + t.options.classPrefix + "settings-li toBeSelected " + selected + "\" data-value=\"" + speeds[_i].value + "\">\n\t\t\t<i class=\"material-icons\">check</i>\n\t\t\t" + speeds[_i].name + "\n\t\t</li>\n\t";
+		}
+
 		player.sourcechooserButton = document.createElement('div');
 		player.sourcechooserButton.className = t.options.classPrefix + "button " + t.options.classPrefix + "sourcechooser-button";
-		player.sourcechooserButton.innerHTML = "<button id=\"" + t.options.classPrefix + "settings-button\" type=\"button\" role=\"button\" aria-haspopup=\"true\" aria-owns=\"" + t.id + "\" title=\"" + sourceTitle + "\" aria-label=\"" + sourceTitle + "\" tabindex=\"0\" class=\"mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect\">\n\t\t\t\t<i class=\"material-icons\">settings</i>\n\t\t</button>" + ("\n\t\t\t<ul class=\"" + t.options.classPrefix + "settings-button-menu\">\n\t\t\t\t  <li class=\"" + t.options.classPrefix + "settings-li flexbox-container switchtoggle\">\n\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Autoplay</span>\n\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t<label class=\"mdl-switch mdl-js-switch mdl-js-ripple-effect\" for=\"switch-autoplay\">\n\t\t\t\t\t\t  \t<input id=\"switch-autoplay\" type=\"checkbox\" class=\"mdl-switch__input\" checked>\n\t\t\t\t\t\t  \t<span class=\"mdl-switch__label\"></span>\n\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container switchtoggle\">\n\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Annotation</span>\n\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t<label class=\"mdl-switch mdl-js-switch mdl-js-ripple-effect\" for=\"switch-annotation\">\n\t\t\t\t\t\t  \t<input id=\"switch-annotation\" type=\"checkbox\" class=\"mdl-switch__input\" checked>\n\t\t\t\t\t\t  \t<span class=\"mdl-switch__label\"></span>\n\t\t\t\t\t\t\t</label>\n\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Speed</div>\n\t\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t\t<span class=\"display_content\">\n\t\t\t\t\t\t\t\t\t" + defaultSpeedText + "\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<i class=\"material-icons\">keyboard_arrow_right</i>\n\t\t\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t  <li class=\"" + t.options.classPrefix + "settings-li flexbox-container\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Subtitles</div>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Quality</div>\n\t\t\t\t\t</li>\n\t\t\t</ul> ");
-
+		player.sourcechooserButton.innerHTML = "<button type=\"button\" role=\"button\" aria-haspopup=\"true\" aria-owns=\"" + t.id + "\" title=\"" + sourceTitle + "\" aria-label=\"" + sourceTitle + "\" tabindex=\"0\" class=\"mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect " + t.options.classPrefix + "settings-button\">\n\t\t\t\t<i class=\"material-icons\">settings</i>\n\t\t</button>" + ("\n\t<div class=\"" + t.options.classPrefix + "settings-button-menu invisible\">\n\n\t\t\t\t<ul class=\"" + t.options.classPrefix + "main-menu\">\n\t\t\t\t  <li class=\"" + t.options.classPrefix + "settings-li flexbox-container switchtoggle\">\n\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Autoplay</span>\n\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t<label class=\"mdl-switch mdl-js-switch mdl-js-ripple-effect\" for=\"switch-autoplay\">\n\t\t\t\t\t\t  \t<input id=\"switch-autoplay\" type=\"checkbox\" class=\"mdl-switch__input\" checked>\n\t\t\t\t\t\t  \t<span class=\"mdl-switch__label\"></span>\n\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container switchtoggle\">\n\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Annotation</span>\n\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t<label class=\"mdl-switch mdl-js-switch mdl-js-ripple-effect\" for=\"switch-annotation\">\n\t\t\t\t\t\t  \t<input id=\"switch-annotation\" type=\"checkbox\" class=\"mdl-switch__input\" checked>\n\t\t\t\t\t\t  \t<span class=\"mdl-switch__label\"></span>\n\t\t\t\t\t\t\t</label>\n\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container " + t.options.classPrefix + "speed-menu-button\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Speed</span>\n\t\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t\t<span class=\"display_content\">\n\t\t\t\t\t\t\t\t\t" + defaultSpeedText + "\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<i class=\"material-icons\">keyboard_arrow_right</i>\n\t\t\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t  <li class=\"" + t.options.classPrefix + "settings-li flexbox-container\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Subtitles</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Quality</span>\n\t\t\t\t\t</li>\n\t\t\t</ul>") + ("\n\t\t<ul class=\"" + t.options.classPrefix + "other-menu " + t.options.classPrefix + "speed-menu not-visible\">\n\t\t\t<li class=\"" + t.options.classPrefix + "back-menu flexbox-container\">\n\t\t\t\t<span class=\"flexbox-adjust\">\n\t\t\t\t\t<i class=\"material-icons\">keyboard_arrow_left</i>\n\t\t\t\t</span>\n\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\tBack\n\t\t\t\t</span>\n\t\t\t</li>\n\t\t\t" + speedsHTML + "\n\t\t</ul>\n  </div> ");
 		t.addControlElement(player.sourcechooserButton, 'sourcechooser');
 
 		var classname = player.sourcechooserButton.getElementsByClassName("switchtoggle");
 		Array.from(classname).forEach(function (element) {
-			element.addEventListener('click', function () {
-				element.querySelector(".mdl-switch").click();
+			element.addEventListener('click', function (e) {
+				if (e.target == element || e.target.classList.contains("mejs__settings-title")) {
+					element.querySelector(".mdl-switch").click();
+				}
 			});
 		});
 		//componentHandler.upgradeElement(button);
@@ -13791,7 +13802,54 @@ Object.assign(MediaElementPlayer.prototype, {
   			}
   		}
   */
+		function closest(el, selector) {
+			var matchesFn;
 
+			// find vendor prefix
+			['matches', 'webkitMatchesSelector', 'mozMatchesSelector', 'msMatchesSelector', 'oMatchesSelector'].some(function (fn) {
+				if (typeof document.body[fn] == 'function') {
+					matchesFn = fn;
+					return true;
+				}
+				return false;
+			});
+
+			var parent;
+
+			// traverse parents
+			while (el) {
+				parent = el.parentElement;
+				if (parent && parent[matchesFn](selector)) {
+					return parent;
+				}
+				el = parent;
+			}
+
+			return null;
+		}
+		player.sourcechooserButton.querySelector("." + t.options.classPrefix + "back-menu").addEventListener('click', function (e) {
+			var back_menu = closest(e.target, "." + t.options.classPrefix + "back-menu");
+			var settings_menu = closest(back_menu, "." + t.options.classPrefix + "settings-button-menu");
+			settings_menu.querySelector("." + t.options.classPrefix + "main-menu").classList.remove("not-visible");
+			settings_menu.querySelector("." + t.options.classPrefix + "other-menu:not(.not-visible)").classList.add("not-visible");
+		});
+		player.sourcechooserButton.querySelector("." + t.options.classPrefix + "speed-menu-button").addEventListener('click', function () {
+			var menu = player.sourcechooserButton.querySelector("." + t.options.classPrefix + "speed-menu");
+			var main_menu = player.sourcechooserButton.querySelector("." + t.options.classPrefix + "main-menu");
+			if (menu.classList.contains("not-visible")) {
+				menu.classList.remove("not-visible");
+				main_menu.classList.add("not-visible");
+			} else {
+				menu.classList.add("not-visible");
+				main_menu.classList.remove("not-visible");
+			}
+		});
+		player.sourcechooserButton.addEventListener('click', function (e) {
+			if (closest(e.target, "." + t.options.classPrefix + "settings-button-menu")) {
+				return false;
+			}
+			player.sourcechooserButton.querySelector("." + t.options.classPrefix + "settings-button-menu").classList.toggle("invisible");
+		});
 		// hover
 		player.sourcechooserButton.addEventListener('mouseover', function () {
 			clearTimeout(hoverTimeout);
@@ -13853,9 +13911,9 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		var radios = player.sourcechooserButton.querySelectorAll('input[type=radio]');
 
-		for (var _i = 0, _total = radios.length; _i < _total; _i++) {
+		for (var _i2 = 0, _total = radios.length; _i2 < _total; _i2++) {
 			// handle clicks to the source radio buttons
-			radios[_i].addEventListener('click', function () {
+			radios[_i2].addEventListener('click', function () {
 				// set aria states
 				this.setAttribute('aria-selected', true);
 				this.checked = true;

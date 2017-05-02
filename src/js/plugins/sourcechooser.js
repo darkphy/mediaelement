@@ -56,15 +56,37 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 */
 
+var speeds = [
+		{name : '0.25',value : 0.25}
+		,{name : '0.5',value : 0.5}
+		,{name : 'Normal',value : 1}
+		,{name : '1.5',value : 1.5}
+		,{name : '2.0',value : 2.0}
+];
+var speedsHTML = "";
+for(let i=0;i<speeds.length;i++){
+	let selected = "";
+	if(speeds[i].value == 1){
+		selected = "selected";
+	}
+	speedsHTML += `
+		<li class="${t.options.classPrefix}settings-li toBeSelected ${selected}" data-value="${speeds[i].value}">
+			<i class="material-icons">check</i>
+			${speeds[i].name}
+		</li>
+	`;
+}
 
 		player.sourcechooserButton = document.createElement('div');
 		player.sourcechooserButton.className = `${t.options.classPrefix}button ${t.options.classPrefix}sourcechooser-button`;
 		player.sourcechooserButton.innerHTML =
-			`<button id="${t.options.classPrefix}settings-button" type="button" role="button" aria-haspopup="true" aria-owns="${t.id}" title="${sourceTitle}" aria-label="${sourceTitle}" tabindex="0" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect">
+			`<button type="button" role="button" aria-haspopup="true" aria-owns="${t.id}" title="${sourceTitle}" aria-label="${sourceTitle}" tabindex="0" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect ${t.options.classPrefix}settings-button">
 				<i class="material-icons">settings</i>
 		</button>` +
 			`
-			<ul class="${t.options.classPrefix}settings-button-menu">
+	<div class="${t.options.classPrefix}settings-button-menu invisible">
+
+				<ul class="${t.options.classPrefix}main-menu">
 				  <li class="${t.options.classPrefix}settings-li flexbox-container switchtoggle">
 						<span class="${t.options.classPrefix}settings-title flexbox-adjust">Autoplay</span>
 						<span class="flexbox-spread">
@@ -83,8 +105,8 @@ Object.assign(MediaElementPlayer.prototype, {
 							</label>
 					</span>
 					</li>
-					<li class="${t.options.classPrefix}settings-li flexbox-container">
-							<span class="${t.options.classPrefix}settings-title flexbox-adjust">Speed</div>
+					<li class="${t.options.classPrefix}settings-li flexbox-container ${t.options.classPrefix}speed-menu-button">
+							<span class="${t.options.classPrefix}settings-title flexbox-adjust">Speed</span>
 							<span class="flexbox-spread">
 								<span class="display_content">
 									${defaultSpeedText}
@@ -93,19 +115,34 @@ Object.assign(MediaElementPlayer.prototype, {
 							</span>
 					</li>
 				  <li class="${t.options.classPrefix}settings-li flexbox-container">
-							<span class="${t.options.classPrefix}settings-title flexbox-adjust">Subtitles</div>
+							<span class="${t.options.classPrefix}settings-title flexbox-adjust">Subtitles</span>
 					</li>
 					<li class="${t.options.classPrefix}settings-li flexbox-container">
-							<span class="${t.options.classPrefix}settings-title flexbox-adjust">Quality</div>
+							<span class="${t.options.classPrefix}settings-title flexbox-adjust">Quality</span>
 					</li>
-			</ul> `;
-
+			</ul>`+
+`
+		<ul class="${t.options.classPrefix}other-menu ${t.options.classPrefix}speed-menu not-visible">
+			<li class="${t.options.classPrefix}back-menu flexbox-container">
+				<span class="flexbox-adjust">
+					<i class="material-icons">keyboard_arrow_left</i>
+				</span>
+				<span class="flexbox-spread">
+					Back
+				</span>
+			</li>
+			${speedsHTML}
+		</ul>
+  </div> `
+			;
 		t.addControlElement(player.sourcechooserButton, 'sourcechooser');
 
 		var classname = player.sourcechooserButton.getElementsByClassName("switchtoggle");
 		Array.from(classname).forEach(function(element) {
-      element.addEventListener('click', () => {
-				element.querySelector(".mdl-switch").click();
+      element.addEventListener('click', (e) => {
+				if(e.target == element || e.target.classList.contains("mejs__settings-title")){
+					element.querySelector(".mdl-switch").click();
+				}
 			});
      });
 		//componentHandler.upgradeElement(button);
@@ -119,7 +156,55 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		}
 */
+function closest(el, selector) {
+    var matchesFn;
 
+    // find vendor prefix
+    ['matches','webkitMatchesSelector','mozMatchesSelector','msMatchesSelector','oMatchesSelector'].some(function(fn) {
+        if (typeof document.body[fn] == 'function') {
+            matchesFn = fn;
+            return true;
+        }
+        return false;
+    })
+
+    var parent;
+
+    // traverse parents
+    while (el) {
+        parent = el.parentElement;
+        if (parent && parent[matchesFn](selector)) {
+            return parent;
+        }
+        el = parent;
+    }
+
+    return null;
+}
+		player.sourcechooserButton.querySelector(`.${t.options.classPrefix}back-menu`).addEventListener('click', (e) => {
+					var back_menu = closest(e.target,`.${t.options.classPrefix}back-menu`);
+					var settings_menu = closest(back_menu,`.${t.options.classPrefix}settings-button-menu`);
+					settings_menu.querySelector(`.${t.options.classPrefix}main-menu`).classList.remove("not-visible");
+					settings_menu.querySelector(`.${t.options.classPrefix}other-menu:not(.not-visible)`).classList.add("not-visible");
+		});
+		player.sourcechooserButton.querySelector(`.${t.options.classPrefix}speed-menu-button`).addEventListener('click', () => {
+			let menu = player.sourcechooserButton.querySelector(`.${t.options.classPrefix}speed-menu`);
+			let main_menu = player.sourcechooserButton.querySelector(`.${t.options.classPrefix}main-menu`);
+				if(menu.classList.contains("not-visible")){
+					menu.classList.remove("not-visible");
+					main_menu.classList.add("not-visible");
+				}else{
+					menu.classList.add("not-visible");
+					main_menu.classList.remove("not-visible");
+				}
+
+		});
+		player.sourcechooserButton.addEventListener('click', (e) => {
+				if(closest(e.target,`.${t.options.classPrefix}settings-button-menu`)){
+					return false;
+				}
+				player.sourcechooserButton.querySelector(`.${t.options.classPrefix}settings-button-menu`).classList.toggle("invisible");
+		});
 		// hover
 		player.sourcechooserButton.addEventListener('mouseover', () => {
 			clearTimeout(hoverTimeout);
