@@ -14,7 +14,16 @@ Object.assign(mejs.MepDefaults, {
 	/**
 	 * @type {?String}
 	 */
-	sourcechooserText: null
+	sourcechooserText: null,
+	defaultQualityText : "Auto",
+	defaultSpeed: 1,
+	speeds : [
+			{name : '0.25',value : 0.25}
+			,{name : '0.5',value : 0.5}
+			,{name : 'Normal',value : 1}
+			,{name : '1.5',value : 1.5}
+			,{name : '2.0',value : 2.0}
+	]
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -31,13 +40,16 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildsourcechooser (player, controls, layers, media)  {
 
 		const
-			t = this,
-			sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
-			defaultSpeedText = "Normal",
-			sources = [],
-			children = t.mediaFiles ? t.mediaFiles : t.node.childNodes
-		;
+			t = this;
+			//sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
+		let
+			settingsText = "Settings",
+			defaultQualityText = (t.options.defaultQualityText) ? t.options.defaultQualityText : "Auto",
+			defaultSpeedText = (t.options.defaultSpeedText) ? t.options.defaultSpeedText : "Normal";
+			//sources = [],
+			//children = t.mediaFiles ? t.mediaFiles : t.node.childNodes
 
+		/*
 		// add to list
 		let hoverTimeout;
 
@@ -50,24 +62,51 @@ Object.assign(MediaElementPlayer.prototype, {
 				sources.push(s);
 			}
 		}
+		*/
 /*
 		if (sources.length <= 1) {
 			return;
 		}
 */
+var qualitys = t.options.qualitys;
+var qualitysHTML = "",qualityUL="";
 
-var speeds = [
-		{name : '0.25',value : 0.25}
-		,{name : '0.5',value : 0.5}
-		,{name : 'Normal',value : 1}
-		,{name : '1.5',value : 1.5}
-		,{name : '2.0',value : 2.0}
-];
+if(qualitys){
+	for(let i=0;i<qualitys.length;i++){
+		let selected = "";
+		if(qualitys[i].value == t.options.defaultQuality){
+			selected = "selected";
+			defaultQualityText = qualitys[i].name;
+		}
+		qualitysHTML += `
+			<li class="${t.options.classPrefix}settings-li toBeSelected ${selected}" data-value="${qualitys[i].value}">
+				<i class="material-icons">check</i>
+				${qualitys[i].name}
+			</li>
+		`;
+	}
+	qualityUL =
+	`<ul class="${t.options.classPrefix}other-menu ${t.options.classPrefix}quality-menu not-visible">
+			<li class="${t.options.classPrefix}back-menu flexbox-container">
+				<span class="flexbox-adjust">
+					<i class="material-icons">keyboard_arrow_left</i>
+				</span>
+				<span class="flexbox-spread">
+					Back
+				</span>
+			</li>
+			${qualitysHTML}
+		</ul>
+		`;
+}
+
+var speeds = t.options.speeds;
 var speedsHTML = "";
 for(let i=0;i<speeds.length;i++){
 	let selected = "";
-	if(speeds[i].value == 1){
+	if(speeds[i].value == t.options.defaultSpeed){
 		selected = "selected";
+		defaultSpeedText = speeds[i].name;
 	}
 	speedsHTML += `
 		<li class="${t.options.classPrefix}settings-li toBeSelected ${selected}" data-value="${speeds[i].value}">
@@ -80,7 +119,7 @@ for(let i=0;i<speeds.length;i++){
 		player.sourcechooserButton = document.createElement('div');
 		player.sourcechooserButton.className = `${t.options.classPrefix}button ${t.options.classPrefix}sourcechooser-button`;
 		player.sourcechooserButton.innerHTML =
-			`<button type="button" role="button" aria-haspopup="true" aria-owns="${t.id}" title="${sourceTitle}" aria-label="${sourceTitle}" tabindex="0" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect ${t.options.classPrefix}settings-button">
+			`<button type="button" role="button" aria-haspopup="true" aria-owns="${t.id}" title="${settingsText}" aria-label="${settingsText}" tabindex="0" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect ${t.options.classPrefix}settings-button">
 				<i class="material-icons">settings</i>
 		</button>` +
 			`
@@ -119,6 +158,12 @@ for(let i=0;i<speeds.length;i++){
 					</li>
 					<li class="${t.options.classPrefix}settings-li flexbox-container">
 							<span class="${t.options.classPrefix}settings-title flexbox-adjust">Quality</span>
+							<span class="flexbox-spread">
+								<span class="display_content">
+									${defaultQualityText}
+								</span>
+								<i class="material-icons">keyboard_arrow_right</i>
+							</span>
 					</li>
 			</ul>`+
 `
@@ -133,6 +178,7 @@ for(let i=0;i<speeds.length;i++){
 			</li>
 			${speedsHTML}
 		</ul>
+		${qualityUL}
   </div> `
 			;
 		t.addControlElement(player.sourcechooserButton, 'sourcechooser');
@@ -172,21 +218,34 @@ function closest(el, selector) {
 
     // traverse parents
     while (el) {
-        parent = el.parentElement;
+        parent = el;
         if (parent && parent[matchesFn](selector)) {
             return parent;
         }
+				parent = el.parentElement;
         el = parent;
     }
 
     return null;
 }
 		player.sourcechooserButton.querySelector(`.${t.options.classPrefix}back-menu`).addEventListener('click', (e) => {
-					var back_menu = closest(e.target,`.${t.options.classPrefix}back-menu`);
-					var settings_menu = closest(back_menu,`.${t.options.classPrefix}settings-button-menu`);
+					let back_menu = closest(e.target,`.${t.options.classPrefix}back-menu`);
+					let settings_menu = closest(back_menu,`.${t.options.classPrefix}settings-button-menu`);
 					settings_menu.querySelector(`.${t.options.classPrefix}main-menu`).classList.remove("not-visible");
 					settings_menu.querySelector(`.${t.options.classPrefix}other-menu:not(.not-visible)`).classList.add("not-visible");
 		});
+		var speedLists = player.sourcechooserButton.querySelector(`.${t.options.classPrefix}speed-menu`).querySelectorAll(`.${t.options.classPrefix}settings-li.toBeSelected`);
+
+
+		[].map.call(speedLists,(elem) => {
+			elem.addEventListener('click', (e) => {
+				let speedOption = closest(e.target,`.${t.options.classPrefix}settings-li.toBeSelected`);
+					speedOption.parentElement.querySelector(`.${t.options.classPrefix}settings-li.toBeSelected.selected`).classList.remove("selected");
+					speedOption.classList.add("selected");
+				let value = speedOption.getAttribute("data-value");
+						media.playbackRate = parseFloat(value);
+			});
+	});
 		player.sourcechooserButton.querySelector(`.${t.options.classPrefix}speed-menu-button`).addEventListener('click', () => {
 			let menu = player.sourcechooserButton.querySelector(`.${t.options.classPrefix}speed-menu`);
 			let main_menu = player.sourcechooserButton.querySelector(`.${t.options.classPrefix}main-menu`);
@@ -215,8 +274,10 @@ function closest(el, selector) {
 				player.hideSourcechooserSelector();
 			}, 500);
 		});
+	}
 
 			// keyboard menu activation
+			/*
 		player.sourcechooserButton.addEventListener('keydown', (e) => {
 
 			if (t.options.keyActions.length) {
@@ -245,7 +306,9 @@ function closest(el, selector) {
 				e.stopPropagation();
 			}
 		});
+		*/
 
+/*
 		// close menu when tabbing away
 		player.sourcechooserButton.addEventListener('focusout', mejs.Utils.debounce(() => {
 			// Safari triggers focusout multiple times
@@ -313,7 +376,7 @@ function closest(el, selector) {
 		});
 
 	},
-
+*/
 	/**
 	 *
 	 * @param {String} src
@@ -321,6 +384,7 @@ function closest(el, selector) {
 	 * @param {String} type
 	 * @param {Boolean} isCurrent
 	 */
+	/*
 	addSourceButton (src, label, type, isCurrent)  {
 		const t = this;
 		if (label === '' || label === undefined) {
@@ -336,20 +400,22 @@ function closest(el, selector) {
 
 		t.adjustSourcechooserBox();
 	},
-
+*/
 	/**
 	 *
 	 */
+	/*
 	adjustSourcechooserBox ()  {
 		const t = this;
 		// adjust the size of the outer box
 		t.sourcechooserButton.querySelector(`.${t.options.classPrefix}sourcechooser-selector`).style.height =
 			`${parseFloat(t.sourcechooserButton.querySelector(`.${t.options.classPrefix}sourcechooser-selector ul`).offsetHeight)}px`;
 	},
-
+*/
 	/**
 	 *
 	 */
+/*
 	hideSourcechooserSelector ()  {
 
 		const t = this;
@@ -371,10 +437,11 @@ function closest(el, selector) {
 			radios[i].setAttribute('tabindex', '-1');
 		}
 	},
-
+*/
 	/**
 	 *
 	 */
+/*
 	showSourcechooserSelector ()  {
 
 		const t = this;
@@ -396,4 +463,5 @@ function closest(el, selector) {
 			radios[i].setAttribute('tabindex', '0');
 		}
 	}
+	*/
 });

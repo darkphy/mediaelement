@@ -9088,12 +9088,22 @@ Object.assign(_player2.default.prototype, {
 
 		var t = this,
 		    fullscreenTitle = (0, _general.isString)(t.options.fullscreenText) ? t.options.fullscreenText : _i18n2.default.t('mejs.fullscreen'),
-		    fullscreenBtn = _document2.default.createElement('div');
+		    widescreenTitle = "Widescreen",
+		    fullscreenBtn = _document2.default.createElement('div'),
+		    widescreenBtn = _document2.default.createElement('div');
+
+		widescreenBtn.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'widescreen-button';
+		widescreenBtn.innerHTML = '\n\t\t\t<button type="button" aria-controls="' + t.id + '" title="' + widescreenTitle + '" aria-label="' + widescreenTitle + '" tabindex="0" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect">\n\t\t\t\t\t<i class="material-icons">panorama_wide_angle</i>\n\t\t\t</button>\n\t\t\t';
 
 		fullscreenBtn.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'fullscreen-button';
 		fullscreenBtn.innerHTML = '\n\t\t\t<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '" tabindex="0" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect">\n\t\t\t\t\t<i class="material-icons">fullscreen</i>\n\t\t\t</button>\n\t\t\t';
-		t.addControlElement(fullscreenBtn, 'fullscreen');
 
+		t.addControlElement(fullscreenBtn, 'fullscreen');
+		t.addControlElement(widescreenBtn, 'widescreen');
+
+		widescreenBtn.addEventListener('click', function () {
+			t.container.classList.toggle("widescreen");
+		});
 		fullscreenBtn.addEventListener('click', function () {
 			// toggle fullscreen
 			var isFullScreen = Features.HAS_TRUE_NATIVE_FULLSCREEN && Features.IS_FULLSCREEN || player.isFullScreen;
@@ -13728,7 +13738,10 @@ Object.assign(mejs.MepDefaults, {
 	/**
   * @type {?String}
   */
-	sourcechooserText: null
+	sourcechooserText: null,
+	defaultQualityText: "Auto",
+	defaultSpeed: 1,
+	speeds: [{ name: '0.25', value: 0.25 }, { name: '0.5', value: 0.5 }, { name: 'Normal', value: 1 }, { name: '1.5', value: 1.5 }, { name: '2.0', value: 2.0 }]
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -13744,43 +13757,61 @@ Object.assign(MediaElementPlayer.prototype, {
   */
 	buildsourcechooser: function buildsourcechooser(player, controls, layers, media) {
 
-		var t = this,
-		    sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
-		    defaultSpeedText = "Normal",
-		    sources = [],
-		    children = t.mediaFiles ? t.mediaFiles : t.node.childNodes;
+		var t = this;
+		//sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
+		var settingsText = "Settings",
+		    defaultQualityText = t.options.defaultQualityText ? t.options.defaultQualityText : "Auto",
+		    defaultSpeedText = t.options.defaultSpeedText ? t.options.defaultSpeedText : "Normal";
+		//sources = [],
+		//children = t.mediaFiles ? t.mediaFiles : t.node.childNodes
 
-		// add to list
-		var hoverTimeout = void 0;
-
-		for (var i = 0, total = children.length; i < total; i++) {
-			var s = children[i];
-
-			if (t.mediaFiles) {
-				sources.push(s);
-			} else if (s.nodeName === 'SOURCE') {
-				sources.push(s);
-			}
-		}
+		/*
+  // add to list
+  let hoverTimeout;
+  	for (let i = 0, total = children.length; i < total; i++) {
+  	const s = children[i];
+  		if (t.mediaFiles) {
+  		sources.push(s);
+  	} else if (s.nodeName === 'SOURCE') {
+  		sources.push(s);
+  	}
+  }
+  */
 		/*
   		if (sources.length <= 1) {
   			return;
   		}
   */
+		var qualitys = t.options.qualitys;
+		var qualitysHTML = "",
+		    qualityUL = "";
 
-		var speeds = [{ name: '0.25', value: 0.25 }, { name: '0.5', value: 0.5 }, { name: 'Normal', value: 1 }, { name: '1.5', value: 1.5 }, { name: '2.0', value: 2.0 }];
+		if (qualitys) {
+			for (var i = 0; i < qualitys.length; i++) {
+				var selected = "";
+				if (qualitys[i].value == t.options.defaultQuality) {
+					selected = "selected";
+					defaultQualityText = qualitys[i].name;
+				}
+				qualitysHTML += "\n\t\t\t<li class=\"" + t.options.classPrefix + "settings-li toBeSelected " + selected + "\" data-value=\"" + qualitys[i].value + "\">\n\t\t\t\t<i class=\"material-icons\">check</i>\n\t\t\t\t" + qualitys[i].name + "\n\t\t\t</li>\n\t\t";
+			}
+			qualityUL = "<ul class=\"" + t.options.classPrefix + "other-menu " + t.options.classPrefix + "quality-menu not-visible\">\n\t\t\t<li class=\"" + t.options.classPrefix + "back-menu flexbox-container\">\n\t\t\t\t<span class=\"flexbox-adjust\">\n\t\t\t\t\t<i class=\"material-icons\">keyboard_arrow_left</i>\n\t\t\t\t</span>\n\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\tBack\n\t\t\t\t</span>\n\t\t\t</li>\n\t\t\t" + qualitysHTML + "\n\t\t</ul>\n\t\t";
+		}
+
+		var speeds = t.options.speeds;
 		var speedsHTML = "";
 		for (var _i = 0; _i < speeds.length; _i++) {
-			var selected = "";
-			if (speeds[_i].value == 1) {
-				selected = "selected";
+			var _selected = "";
+			if (speeds[_i].value == t.options.defaultSpeed) {
+				_selected = "selected";
+				defaultSpeedText = speeds[_i].name;
 			}
-			speedsHTML += "\n\t\t<li class=\"" + t.options.classPrefix + "settings-li toBeSelected " + selected + "\" data-value=\"" + speeds[_i].value + "\">\n\t\t\t<i class=\"material-icons\">check</i>\n\t\t\t" + speeds[_i].name + "\n\t\t</li>\n\t";
+			speedsHTML += "\n\t\t<li class=\"" + t.options.classPrefix + "settings-li toBeSelected " + _selected + "\" data-value=\"" + speeds[_i].value + "\">\n\t\t\t<i class=\"material-icons\">check</i>\n\t\t\t" + speeds[_i].name + "\n\t\t</li>\n\t";
 		}
 
 		player.sourcechooserButton = document.createElement('div');
 		player.sourcechooserButton.className = t.options.classPrefix + "button " + t.options.classPrefix + "sourcechooser-button";
-		player.sourcechooserButton.innerHTML = "<button type=\"button\" role=\"button\" aria-haspopup=\"true\" aria-owns=\"" + t.id + "\" title=\"" + sourceTitle + "\" aria-label=\"" + sourceTitle + "\" tabindex=\"0\" class=\"mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect " + t.options.classPrefix + "settings-button\">\n\t\t\t\t<i class=\"material-icons\">settings</i>\n\t\t</button>" + ("\n\t<div class=\"" + t.options.classPrefix + "settings-button-menu invisible\">\n\n\t\t\t\t<ul class=\"" + t.options.classPrefix + "main-menu\">\n\t\t\t\t  <li class=\"" + t.options.classPrefix + "settings-li flexbox-container switchtoggle\">\n\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Autoplay</span>\n\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t<label class=\"mdl-switch mdl-js-switch mdl-js-ripple-effect\" for=\"switch-autoplay\">\n\t\t\t\t\t\t  \t<input id=\"switch-autoplay\" type=\"checkbox\" class=\"mdl-switch__input\" checked>\n\t\t\t\t\t\t  \t<span class=\"mdl-switch__label\"></span>\n\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container switchtoggle\">\n\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Annotation</span>\n\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t<label class=\"mdl-switch mdl-js-switch mdl-js-ripple-effect\" for=\"switch-annotation\">\n\t\t\t\t\t\t  \t<input id=\"switch-annotation\" type=\"checkbox\" class=\"mdl-switch__input\" checked>\n\t\t\t\t\t\t  \t<span class=\"mdl-switch__label\"></span>\n\t\t\t\t\t\t\t</label>\n\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container " + t.options.classPrefix + "speed-menu-button\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Speed</span>\n\t\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t\t<span class=\"display_content\">\n\t\t\t\t\t\t\t\t\t" + defaultSpeedText + "\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<i class=\"material-icons\">keyboard_arrow_right</i>\n\t\t\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t  <li class=\"" + t.options.classPrefix + "settings-li flexbox-container\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Subtitles</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Quality</span>\n\t\t\t\t\t</li>\n\t\t\t</ul>") + ("\n\t\t<ul class=\"" + t.options.classPrefix + "other-menu " + t.options.classPrefix + "speed-menu not-visible\">\n\t\t\t<li class=\"" + t.options.classPrefix + "back-menu flexbox-container\">\n\t\t\t\t<span class=\"flexbox-adjust\">\n\t\t\t\t\t<i class=\"material-icons\">keyboard_arrow_left</i>\n\t\t\t\t</span>\n\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\tBack\n\t\t\t\t</span>\n\t\t\t</li>\n\t\t\t" + speedsHTML + "\n\t\t</ul>\n  </div> ");
+		player.sourcechooserButton.innerHTML = "<button type=\"button\" role=\"button\" aria-haspopup=\"true\" aria-owns=\"" + t.id + "\" title=\"" + settingsText + "\" aria-label=\"" + settingsText + "\" tabindex=\"0\" class=\"mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect " + t.options.classPrefix + "settings-button\">\n\t\t\t\t<i class=\"material-icons\">settings</i>\n\t\t</button>" + ("\n\t<div class=\"" + t.options.classPrefix + "settings-button-menu invisible\">\n\n\t\t\t\t<ul class=\"" + t.options.classPrefix + "main-menu\">\n\t\t\t\t  <li class=\"" + t.options.classPrefix + "settings-li flexbox-container switchtoggle\">\n\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Autoplay</span>\n\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t<label class=\"mdl-switch mdl-js-switch mdl-js-ripple-effect\" for=\"switch-autoplay\">\n\t\t\t\t\t\t  \t<input id=\"switch-autoplay\" type=\"checkbox\" class=\"mdl-switch__input\" checked>\n\t\t\t\t\t\t  \t<span class=\"mdl-switch__label\"></span>\n\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container switchtoggle\">\n\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Annotation</span>\n\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t<label class=\"mdl-switch mdl-js-switch mdl-js-ripple-effect\" for=\"switch-annotation\">\n\t\t\t\t\t\t  \t<input id=\"switch-annotation\" type=\"checkbox\" class=\"mdl-switch__input\" checked>\n\t\t\t\t\t\t  \t<span class=\"mdl-switch__label\"></span>\n\t\t\t\t\t\t\t</label>\n\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container " + t.options.classPrefix + "speed-menu-button\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Speed</span>\n\t\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t\t<span class=\"display_content\">\n\t\t\t\t\t\t\t\t\t" + defaultSpeedText + "\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<i class=\"material-icons\">keyboard_arrow_right</i>\n\t\t\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t\t  <li class=\"" + t.options.classPrefix + "settings-li flexbox-container\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Subtitles</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"" + t.options.classPrefix + "settings-li flexbox-container\">\n\t\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "settings-title flexbox-adjust\">Quality</span>\n\t\t\t\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\t\t\t\t<span class=\"display_content\">\n\t\t\t\t\t\t\t\t\t" + defaultQualityText + "\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<i class=\"material-icons\">keyboard_arrow_right</i>\n\t\t\t\t\t\t\t</span>\n\t\t\t\t\t</li>\n\t\t\t</ul>") + ("\n\t\t<ul class=\"" + t.options.classPrefix + "other-menu " + t.options.classPrefix + "speed-menu not-visible\">\n\t\t\t<li class=\"" + t.options.classPrefix + "back-menu flexbox-container\">\n\t\t\t\t<span class=\"flexbox-adjust\">\n\t\t\t\t\t<i class=\"material-icons\">keyboard_arrow_left</i>\n\t\t\t\t</span>\n\t\t\t\t<span class=\"flexbox-spread\">\n\t\t\t\t\tBack\n\t\t\t\t</span>\n\t\t\t</li>\n\t\t\t" + speedsHTML + "\n\t\t</ul>\n\t\t" + qualityUL + "\n  </div> ");
 		t.addControlElement(player.sourcechooserButton, 'sourcechooser');
 
 		var classname = player.sourcechooserButton.getElementsByClassName("switchtoggle");
@@ -13818,10 +13849,11 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			// traverse parents
 			while (el) {
-				parent = el.parentElement;
+				parent = el;
 				if (parent && parent[matchesFn](selector)) {
 					return parent;
 				}
+				parent = el.parentElement;
 				el = parent;
 			}
 
@@ -13832,6 +13864,17 @@ Object.assign(MediaElementPlayer.prototype, {
 			var settings_menu = closest(back_menu, "." + t.options.classPrefix + "settings-button-menu");
 			settings_menu.querySelector("." + t.options.classPrefix + "main-menu").classList.remove("not-visible");
 			settings_menu.querySelector("." + t.options.classPrefix + "other-menu:not(.not-visible)").classList.add("not-visible");
+		});
+		var speedLists = player.sourcechooserButton.querySelector("." + t.options.classPrefix + "speed-menu").querySelectorAll("." + t.options.classPrefix + "settings-li.toBeSelected");
+
+		[].map.call(speedLists, function (elem) {
+			elem.addEventListener('click', function (e) {
+				var speedOption = closest(e.target, "." + t.options.classPrefix + "settings-li.toBeSelected");
+				speedOption.parentElement.querySelector("." + t.options.classPrefix + "settings-li.toBeSelected.selected").classList.remove("selected");
+				speedOption.classList.add("selected");
+				var value = speedOption.getAttribute("data-value");
+				media.playbackRate = parseFloat(value);
+			});
 		});
 		player.sourcechooserButton.querySelector("." + t.options.classPrefix + "speed-menu-button").addEventListener('click', function () {
 			var menu = player.sourcechooserButton.querySelector("." + t.options.classPrefix + "speed-menu");
@@ -13860,107 +13903,106 @@ Object.assign(MediaElementPlayer.prototype, {
 				player.hideSourcechooserSelector();
 			}, 500);
 		});
+	}
 
-		// keyboard menu activation
-		player.sourcechooserButton.addEventListener('keydown', function (e) {
+	// keyboard menu activation
+	/*
+ player.sourcechooserButton.addEventListener('keydown', (e) => {
+ 	if (t.options.keyActions.length) {
+ 	const keyCode = e.which || e.keyCode || 0;
+ 		switch (keyCode) {
+ 		case 32: // space
+ 			if (!mejs.MediaFeatures.isFirefox) { // space sends the click event in Firefox
+ 				player.showSourcechooserSelector();
+ 			}
+ 			player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
+ 			break;
+ 		case 13: // enter
+ 			player.showSourcechooserSelector();
+ 			player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
+ 			break;
+ 		case 27: // esc
+ 			player.hideSourcechooserSelector();
+ 			player.sourcechooserButton.querySelector('button').focus();
+ 			break;
+ 		default:
+ 			return true;
+ 	}
+ 		e.preventDefault();
+ 	e.stopPropagation();
+ }
+ });
+ */
 
-			if (t.options.keyActions.length) {
-				var keyCode = e.which || e.keyCode || 0;
-
-				switch (keyCode) {
-					case 32:
-						// space
-						if (!mejs.MediaFeatures.isFirefox) {
-							// space sends the click event in Firefox
-							player.showSourcechooserSelector();
-						}
-						player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
-						break;
-					case 13:
-						// enter
-						player.showSourcechooserSelector();
-						player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
-						break;
-					case 27:
-						// esc
-						player.hideSourcechooserSelector();
-						player.sourcechooserButton.querySelector('button').focus();
-						break;
-					default:
-						return true;
-				}
-
-				e.preventDefault();
-				e.stopPropagation();
-			}
-		});
-
-		// close menu when tabbing away
-		player.sourcechooserButton.addEventListener('focusout', mejs.Utils.debounce(function () {
-			// Safari triggers focusout multiple times
-			// Firefox does NOT support e.relatedTarget to see which element
-			// just lost focus, so wait to find the next focused element
-			setTimeout(function () {
-				var parent = document.activeElement.closest("." + t.options.classPrefix + "sourcechooser-selector");
-				if (!parent) {
-					// focus is outside the control; close menu
-					player.hideSourcechooserSelector();
-				}
-			}, 0);
-		}, 100));
-
-		var radios = player.sourcechooserButton.querySelectorAll('input[type=radio]');
-
-		for (var _i2 = 0, _total = radios.length; _i2 < _total; _i2++) {
-			// handle clicks to the source radio buttons
-			radios[_i2].addEventListener('click', function () {
-				// set aria states
-				this.setAttribute('aria-selected', true);
-				this.checked = true;
-
-				var otherRadios = this.closest("." + t.options.classPrefix + "sourcechooser-selector").querySelectorAll('input[type=radio]');
-
-				for (var j = 0, radioTotal = otherRadios.length; j < radioTotal; j++) {
-					if (otherRadios[j] !== this) {
-						otherRadios[j].setAttribute('aria-selected', 'false');
-						otherRadios[j].removeAttribute('checked');
-					}
-				}
-
-				var src = this.value;
-
-				if (media.getSrc() !== src) {
-					var currentTime = media.currentTime;
-
-					var paused = media.paused,
-					    canPlayAfterSourceSwitchHandler = function canPlayAfterSourceSwitchHandler() {
-						if (!paused) {
-							media.setCurrentTime(currentTime);
-							media.play();
-						}
-						media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
-					};
-
-					media.pause();
-					media.setSrc(src);
-					media.load();
-					media.addEventListener('canplay', canPlayAfterSourceSwitchHandler);
-				}
-			});
-		}
-
-		// Handle click so that screen readers can toggle the menu
-		player.sourcechooserButton.querySelector('button').addEventListener('click', function () {
-			if (mejs.Utils.hasClass(mejs.Utils.siblings(this, "." + t.options.classPrefix + "sourcechooser-selector"), t.options.classPrefix + "offscreen")) {
-				player.showSourcechooserSelector();
-				player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
-			} else {
-				player.hideSourcechooserSelector();
-			}
-		});
-	},
-
-
+	/*
+ 		// close menu when tabbing away
+ 		player.sourcechooserButton.addEventListener('focusout', mejs.Utils.debounce(() => {
+ 			// Safari triggers focusout multiple times
+ 			// Firefox does NOT support e.relatedTarget to see which element
+ 			// just lost focus, so wait to find the next focused element
+ 			setTimeout(() => {
+ 				const parent = document.activeElement.closest(`.${t.options.classPrefix}sourcechooser-selector`);
+ 				if (!parent) {
+ 					// focus is outside the control; close menu
+ 					player.hideSourcechooserSelector();
+ 				}
+ 			}, 0);
+ 		}, 100));
+ 
+ 		const radios = player.sourcechooserButton.querySelectorAll('input[type=radio]');
+ 
+ 		for (let i = 0, total = radios.length; i < total; i++) {
+ 			// handle clicks to the source radio buttons
+ 			radios[i].addEventListener('click', function() {
+ 				// set aria states
+ 				this.setAttribute('aria-selected', true);
+ 				this.checked = true;
+ 
+ 				const otherRadios = this.closest(`.${t.options.classPrefix}sourcechooser-selector`).querySelectorAll('input[type=radio]');
+ 
+ 				for (let j = 0, radioTotal = otherRadios.length; j < radioTotal; j++) {
+ 					if (otherRadios[j] !== this) {
+ 						otherRadios[j].setAttribute('aria-selected', 'false');
+ 						otherRadios[j].removeAttribute('checked');
+ 					}
+ 				}
+ 
+ 				const src = this.value;
+ 
+ 				if (media.getSrc() !== src) {
+ 					let currentTime = media.currentTime;
+ 
+ 					const
+ 						paused = media.paused,
+ 						canPlayAfterSourceSwitchHandler = () => {
+ 							if (!paused) {
+ 								media.setCurrentTime(currentTime);
+ 								media.play();
+ 							}
+ 							media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
+ 						}
+ 					;
+ 
+ 					media.pause();
+ 					media.setSrc(src);
+ 					media.load();
+ 					media.addEventListener('canplay', canPlayAfterSourceSwitchHandler);
+ 				}
+ 			});
+ 		}
+ 
+ 		// Handle click so that screen readers can toggle the menu
+ 		player.sourcechooserButton.querySelector('button').addEventListener('click', function() {
+ 			if (mejs.Utils.hasClass(mejs.Utils.siblings(this, `.${t.options.classPrefix}sourcechooser-selector`), `${t.options.classPrefix}offscreen`)) {
+ 				player.showSourcechooserSelector();
+ 				player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
+ 			} else {
+ 				player.hideSourcechooserSelector();
+ 			}
+ 		});
+ 
+ 	},
+ */
 	/**
   *
   * @param {String} src
@@ -13968,75 +14010,85 @@ Object.assign(MediaElementPlayer.prototype, {
   * @param {String} type
   * @param {Boolean} isCurrent
   */
-	addSourceButton: function addSourceButton(src, label, type, isCurrent) {
-		var t = this;
-		if (label === '' || label === undefined) {
-			label = src;
-		}
-		type = type.split('/')[1];
-
-		t.sourcechooserButton.querySelector('ul').innerHTML += "<li>" + ("<input type=\"radio\" name=\"" + t.id + "_sourcechooser\" id=\"" + t.id + "_sourcechooser_" + label + type + "\"") + ("role=\"menuitemradio\" value=\"" + src + "\" " + (isCurrent ? 'checked="checked"' : '') + " aria-selected=\"" + isCurrent + "\"/>") + ("<label for=\"" + t.id + "_sourcechooser_" + label + type + "\" aria-hidden=\"true\">" + label + " (" + type + ")</label>") + "</li>";
-
-		t.adjustSourcechooserBox();
-	},
-
-
+	/*
+ addSourceButton (src, label, type, isCurrent)  {
+ 	const t = this;
+ 	if (label === '' || label === undefined) {
+ 		label = src;
+ 	}
+ 	type = type.split('/')[1];
+ 		t.sourcechooserButton.querySelector('ul').innerHTML += `<li>` +
+ 		`<input type="radio" name="${t.id}_sourcechooser" id="${t.id}_sourcechooser_${label}${type}"` +
+ 			`role="menuitemradio" value="${src}" ${(isCurrent ? 'checked="checked"' : '')} aria-selected="${isCurrent}"/>` +
+ 		`<label for="${t.id}_sourcechooser_${label}${type}" aria-hidden="true">${label} (${type})</label>` +
+ 	`</li>`;
+ 		t.adjustSourcechooserBox();
+ },
+ */
 	/**
   *
   */
-	adjustSourcechooserBox: function adjustSourcechooserBox() {
-		var t = this;
-		// adjust the size of the outer box
-		t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector").style.height = parseFloat(t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector ul").offsetHeight) + "px";
-	},
-
-
+	/*
+ adjustSourcechooserBox ()  {
+ 	const t = this;
+ 	// adjust the size of the outer box
+ 	t.sourcechooserButton.querySelector(`.${t.options.classPrefix}sourcechooser-selector`).style.height =
+ 		`${parseFloat(t.sourcechooserButton.querySelector(`.${t.options.classPrefix}sourcechooser-selector ul`).offsetHeight)}px`;
+ },
+ */
 	/**
   *
   */
-	hideSourcechooserSelector: function hideSourcechooserSelector() {
-
-		var t = this;
-
-		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.querySelector('input[type=radio]')) {
-			return;
-		}
-
-		var selector = t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector"),
-		    radios = selector.querySelectorAll('input[type=radio]');
-		selector.setAttribute('aria-expanded', 'false');
-		selector.setAttribute('aria-hidden', 'true');
-		mejs.Utils.addClass(selector, t.options.classPrefix + "offscreen");
-
-		// make radios not focusable
-		for (var i = 0, total = radios.length; i < total; i++) {
-			radios[i].setAttribute('tabindex', '-1');
-		}
-	},
-
-
+	/*
+ 	hideSourcechooserSelector ()  {
+ 
+ 		const t = this;
+ 
+ 		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.querySelector('input[type=radio]')) {
+ 			return;
+ 		}
+ 
+ 		const
+ 			selector = t.sourcechooserButton.querySelector(`.${t.options.classPrefix}sourcechooser-selector`),
+ 			radios = selector.querySelectorAll('input[type=radio]')
+ 		;
+ 		selector.setAttribute('aria-expanded', 'false');
+ 		selector.setAttribute('aria-hidden', 'true');
+ 		mejs.Utils.addClass(selector, `${t.options.classPrefix}offscreen`);
+ 
+ 		// make radios not focusable
+ 		for (let i = 0, total = radios.length; i < total; i++) {
+ 			radios[i].setAttribute('tabindex', '-1');
+ 		}
+ 	},
+ */
 	/**
   *
   */
-	showSourcechooserSelector: function showSourcechooserSelector() {
+	/*
+ 	showSourcechooserSelector ()  {
+ 
+ 		const t = this;
+ 
+ 		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.querySelector('input[type=radio]')) {
+ 			return;
+ 		}
+ 
+ 		const
+ 			selector = t.sourcechooserButton.querySelector(`.${t.options.classPrefix}sourcechooser-selector`),
+ 			radios = selector.querySelectorAll('input[type=radio]')
+ 		;
+ 		selector.setAttribute('aria-expanded', 'true');
+ 		selector.setAttribute('aria-hidden', 'false');
+ 		mejs.Utils.removeClass(selector, `${t.options.classPrefix}offscreen`);
+ 
+ 		// make radios not focusable
+ 		for (let i = 0, total = radios.length; i < total; i++) {
+ 			radios[i].setAttribute('tabindex', '0');
+ 		}
+ 	}
+ 	*/
 
-		var t = this;
-
-		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.querySelector('input[type=radio]')) {
-			return;
-		}
-
-		var selector = t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector"),
-		    radios = selector.querySelectorAll('input[type=radio]');
-		selector.setAttribute('aria-expanded', 'true');
-		selector.setAttribute('aria-hidden', 'false');
-		mejs.Utils.removeClass(selector, t.options.classPrefix + "offscreen");
-
-		// make radios not focusable
-		for (var i = 0, total = radios.length; i < total; i++) {
-			radios[i].setAttribute('tabindex', '0');
-		}
-	}
 });
 
 },{}],19:[function(_dereq_,module,exports){

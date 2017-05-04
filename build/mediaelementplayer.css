@@ -133,6 +133,8 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 .mejs__layer {
     z-index: 1;
+    height: 100%!important;
+    width: 100%!important;
 }
 
 .mejs__overlay-play {
@@ -263,7 +265,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs__time-rail {
     float: left;
     margin: 0;
-    width: 32px;
+    width: 40px;
     height: 40px;
     font-size: 10px;
     line-height: 10px;
@@ -504,7 +506,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* End: Progress Bar */
 
 /* Start: Fullscreen */
-.mejs__fullscreen-button,.mejs__sourcechooser-button{
+.mejs__fullscreen-button,.mejs__widescreen-button,.mejs__sourcechooser-button{
   float: right;
 }
 .mejs__fullscreen-button > button {
@@ -516,6 +518,14 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 /* End: Fullscreen */
+/* Start: widescreen */
+.mejs__container.widescreen{
+  width: 100%!important;
+}
+.mejs__container.widescreen .mejs__mediaelement{
+    text-align: center;
+}
+/* End: widescreen */
 
 /* Start: Mute/Volume */
 .mejs__mute > button {

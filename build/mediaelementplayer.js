@@ -9088,12 +9088,22 @@ Object.assign(_player2.default.prototype, {
 
 		var t = this,
 		    fullscreenTitle = (0, _general.isString)(t.options.fullscreenText) ? t.options.fullscreenText : _i18n2.default.t('mejs.fullscreen'),
-		    fullscreenBtn = _document2.default.createElement('div');
+		    widescreenTitle = "Widescreen",
+		    fullscreenBtn = _document2.default.createElement('div'),
+		    widescreenBtn = _document2.default.createElement('div');
+
+		widescreenBtn.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'widescreen-button';
+		widescreenBtn.innerHTML = '\n\t\t\t<button type="button" aria-controls="' + t.id + '" title="' + widescreenTitle + '" aria-label="' + widescreenTitle + '" tabindex="0" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect">\n\t\t\t\t\t<i class="material-icons">panorama_wide_angle</i>\n\t\t\t</button>\n\t\t\t';
 
 		fullscreenBtn.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'fullscreen-button';
 		fullscreenBtn.innerHTML = '\n\t\t\t<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '" tabindex="0" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect">\n\t\t\t\t\t<i class="material-icons">fullscreen</i>\n\t\t\t</button>\n\t\t\t';
-		t.addControlElement(fullscreenBtn, 'fullscreen');
 
+		t.addControlElement(fullscreenBtn, 'fullscreen');
+		t.addControlElement(widescreenBtn, 'widescreen');
+
+		widescreenBtn.addEventListener('click', function () {
+			t.container.classList.toggle("widescreen");
+		});
 		fullscreenBtn.addEventListener('click', function () {
 			// toggle fullscreen
 			var isFullScreen = Features.HAS_TRUE_NATIVE_FULLSCREEN && Features.IS_FULLSCREEN || player.isFullScreen;

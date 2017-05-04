@@ -83,8 +83,17 @@ Object.assign(MediaElementPlayer.prototype, {
 		const
 			t = this,
 			fullscreenTitle = isString(t.options.fullscreenText) ? t.options.fullscreenText : i18n.t('mejs.fullscreen'),
-			fullscreenBtn = document.createElement('div')
+			widescreenTitle = "Widescreen",
+			fullscreenBtn = document.createElement('div'),
+			widescreenBtn = document.createElement('div')
 		;
+
+		widescreenBtn.className = `${t.options.classPrefix}button ${t.options.classPrefix}widescreen-button`;
+		widescreenBtn.innerHTML = `
+			<button type="button" aria-controls="${t.id}" title="${widescreenTitle}" aria-label="${widescreenTitle}" tabindex="0" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect">
+					<i class="material-icons">panorama_wide_angle</i>
+			</button>
+			`;
 
 		fullscreenBtn.className = `${t.options.classPrefix}button ${t.options.classPrefix}fullscreen-button`;
 		fullscreenBtn.innerHTML = `
@@ -92,8 +101,14 @@ Object.assign(MediaElementPlayer.prototype, {
 					<i class="material-icons">fullscreen</i>
 			</button>
 			`;
-		t.addControlElement(fullscreenBtn, 'fullscreen');
 
+		t.addControlElement(fullscreenBtn, 'fullscreen');
+		t.addControlElement(widescreenBtn, 'widescreen');
+
+
+		widescreenBtn.addEventListener('click', () => {
+			t.container.classList.toggle("widescreen");
+		});
 		fullscreenBtn.addEventListener('click', () => {
 			// toggle fullscreen
 			const isFullScreen = (Features.HAS_TRUE_NATIVE_FULLSCREEN && Features.IS_FULLSCREEN) || player.isFullScreen;
